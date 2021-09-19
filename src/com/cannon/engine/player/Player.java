@@ -68,19 +68,6 @@ public abstract class Player {
         return this.legalMoves.contains(move);
     }
 
-    //TODO: Implement methods below
-    public boolean isUnderAttack() {
-        return false;
-    }
-
-    public boolean hasEmptyTiles() {
-        return false;
-    }
-
-    public boolean isFormedCannon() {
-        return false;
-    }
-
     public boolean isInCheck() {
         return this.isInCheck;
     }

@@ -19,8 +19,9 @@ public class Soldier extends Piece {
     private final static int[] NEIGHBOUR_COORDINATES = {10, 9, 11, 1};
 
     public Soldier(final Alliance pieceAlliance, final int piecePosition) {
-        super(PieceType.SOLDIER, piecePosition, pieceAlliance);
+        super(PieceType.SOLDIER, piecePosition, pieceAlliance, true);
     }
+
 
     @Override
     public Collection<Move> calculateLegalMoves(final Board board) {

@@ -27,15 +27,19 @@ import static javax.swing.SwingUtilities.*;
 
 public class Table {
     private final JFrame gameframe;
+    private final GameHistoryPanel gameHistoryPanel;
+    private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
+    private final MoveLog moveLog;
     private Board cannonBoard;
 
     private Tile sourceTile;
     private Tile destinationTile;
     private Piece humanMovedPiece;
     private BoardDirection boardDirection;
+    private boolean highlightLegalMoves;
 
-    private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(600,600);
+    private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(800,800);
     private final static Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
     private final static Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
     private static String defaultPieceImagesPath = "art/pieces/plain/";
@@ -51,8 +55,14 @@ public class Table {
         this.gameframe.setJMenuBar(tableMenuBar);
         this.gameframe.setSize(OUTER_FRAME_DIMENSION);
         this.cannonBoard = Board.createStandardBoard();
+        this.gameHistoryPanel = new GameHistoryPanel();
+        this.takenPiecesPanel = new TakenPiecesPanel();
         this.boardPanel = new BoardPanel();
+        this.moveLog = new MoveLog();
         this.boardDirection = BoardDirection.NORMAL;
+        this.highlightLegalMoves = false;
+        this.gameframe.add(this.takenPiecesPanel, BorderLayout.WEST);
+        this.gameframe.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameframe.add(this.boardPanel, BorderLayout.CENTER);
         this.gameframe.setVisible(true);
         this.gameframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -97,6 +107,15 @@ public class Table {
             }
         });
         preferencesMenu.add(flipBoardMenuItem);
+        preferencesMenu.addSeparator();
+        final JCheckBoxMenuItem legalMoveHighLighterCheckbox = new JCheckBoxMenuItem("Highlight Legal MOves", false);
+        legalMoveHighLighterCheckbox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                highlightLegalMoves = legalMoveHighLighterCheckbox.isSelected();
+            }
+        });
+        preferencesMenu.add(legalMoveHighLighterCheckbox);
         return preferencesMenu;
     }
 
@@ -155,6 +174,37 @@ public class Table {
         }
     }
 
+    public static class MoveLog {
+        private final List<Move> moves;
+        MoveLog() {
+            this.moves = new ArrayList<>();
+        }
+
+        public List<Move> getMoves() {
+            return this.moves;
+        }
+
+        public void addMove(final Move move) {
+            this.moves.add(move);
+        }
+
+        public int size() {
+            return this.moves.size();
+        }
+
+        public void clear() {
+            this.moves.clear();
+        }
+
+        public Move removeMove(int index) {
+            return this.moves.remove(index);
+        }
+
+        public boolean removeMove(final Move move) {
+            return this.moves.remove(move);
+        }
+    }
+
 
 
     private class TilePanel extends JPanel {
@@ -185,6 +235,7 @@ public class Table {
                             final MoveTransition transition = cannonBoard.currentPlayer().makeMove(move);
                             if(transition.getMoveStatus().isDone()) {
                                 cannonBoard = transition.getTransitionBoard();
+                                moveLog.addMove(move);
                             }
                             sourceTile = null;
                             destinationTile = null;
@@ -193,6 +244,8 @@ public class Table {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
+                                gameHistoryPanel.redo(cannonBoard, moveLog);
+                                takenPiecesPanel.redo(moveLog);
                                 boardPanel.drawBoard(cannonBoard);
                             }
                         });
@@ -244,7 +297,7 @@ public class Table {
         }
 
         private void highlightLegals(final Board board) {
-            if(true) {
+            if(highlightLegalMoves) {
                 for(final Move move : pieceLegalMoves(board)) {
                     if(move.getDestinationCoordinate() == this.tileId) {
                         try {

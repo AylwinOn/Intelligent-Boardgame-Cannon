@@ -102,8 +102,8 @@ public class Board {
 
     public static Board createStandardBoard() {
         final Builder builder = new Builder();
-        builder.setPiece(new Town(0, Alliance.LIGHT));
-        builder.setPiece(new Town(99, Alliance.DARK));
+        builder.setPiece(new Town(0, Alliance.LIGHT, true));
+        builder.setPiece(new Town(99, Alliance.DARK, true));
 
         builder.setPiece(new Soldier(Alliance.LIGHT, 11));
         builder.setPiece(new Soldier(Alliance.LIGHT, 13));

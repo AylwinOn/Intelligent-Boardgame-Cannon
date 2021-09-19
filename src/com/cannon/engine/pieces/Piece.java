@@ -13,11 +13,11 @@ public abstract class Piece {
     protected boolean isFirstMove;
     private final int cachedHashCode;
 
-    Piece(final PieceType pieceType, final int piecePosition, final Alliance pieceAlliance) {
+    Piece(final PieceType pieceType, final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove) {
         this.pieceType = pieceType;
         this.piecePosition = piecePosition;
         this.pieceAlliance = pieceAlliance;
-        this.isFirstMove = true;
+        this.isFirstMove = isFirstMove;
         this.cachedHashCode = computeHashCode();
     }
 
@@ -63,32 +63,42 @@ public abstract class Piece {
         return this.pieceType;
     }
 
+    public int getPieceValue(){
+        return this.pieceType.getPieceValue();
+    }
+
     public abstract Collection<Move> calculateLegalMoves(final Board board);
 
     public abstract Piece movePiece(Move move);
 
     public enum  PieceType {
-        SOLDIER("S") {
+        SOLDIER("S", 100) {
             @Override
             public boolean isTown() {
                 return false;
             }
         },
-        TOWN("T") {
+        TOWN("T", 10000) {
             @Override
             public boolean isTown() {
                 return true;
             }
         };
         private String pieceName;
+        private int pieceValue;
 
-        PieceType(final String pieceName) {
+        PieceType(final String pieceName, final int pieceValue) {
             this.pieceName = pieceName;
+            this.pieceValue = pieceValue;
         }
 
         @Override
         public String toString() {
             return this.pieceName;
+        }
+
+        public int getPieceValue() {
+            return this.pieceValue;
         }
 
         public abstract boolean isTown();
