@@ -130,7 +130,6 @@ public class Soldier extends Piece {
                 final Piece pieceOnCandidateDOWN2 = board.getTile(candidateNeighbourCoordinateDOWN2).getPiece();
                 if(this.pieceAlliance == pieceOnCandidateDOWN.getPieceAlliance() && this.pieceAlliance == pieceOnCandidateDOWN2.getPieceAlliance()
                         && this.pieceType == pieceOnCandidateDOWN.getPieceType() && this.pieceType == pieceOnCandidateDOWN2.getPieceType()) {
-                    System.out.println(candidateNeighbourCoordinateDOWN3);
                     if(candidateNeighbourCoordinateDOWN3 > 0 && candidateNeighbourCoordinateDOWN3 < 100 && !board.getTile(candidateNeighbourCoordinateDOWN3).isTileOccupied()) {
                         legalMoves.add(new CannonSlideMove(board, this, candidateNeighbourCoordinateDOWN3));
                     }

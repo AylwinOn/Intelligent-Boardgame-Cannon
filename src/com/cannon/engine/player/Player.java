@@ -19,7 +19,6 @@ public abstract class Player {
     protected final Soldier playerSoldier;
     protected final Collection<Move> legalMoves;
     private final boolean isInCheck;
-    //private final boolean isUnderAttack;
 
     Player(final Board board,
            final Collection<Move> legalMoves,
@@ -29,7 +28,6 @@ public abstract class Player {
         this.playerSoldier = establishSoldier();
         this.legalMoves = legalMoves;
         this.isInCheck = !Player.calculateAttackOnTile(this.playerTown.getPiecePosition(), opponentMoves).isEmpty();
-        //this.isUnderAttack = !Player.calculateAttackOnTile(this.playerSoldier.getPiecePosition(), opponentMoves).isEmpty();
     }
 
     public Town getPlayerTown() {
@@ -74,16 +72,17 @@ public abstract class Player {
 
 
     public MoveTransition makeMove(final Move move) {
-        if(!isMoveLegal(move)) {
-            return new MoveTransition(this.board, move, MoveStatus.ILLEGAL_MOVE);
+        if (!this.legalMoves.contains(move)) {
+            return new MoveTransition(this.board, this.board, move, MoveStatus.ILLEGAL_MOVE);
         }
-        final Board transitionBoard = move.execute();
-        final Collection<Move> townAttacks = Player.calculateAttackOnTile(transitionBoard.currentPlayer().getOpponent().getPlayerTown().getPiecePosition(),
-                transitionBoard.currentPlayer().getLegalMoves());
-        if(!townAttacks.isEmpty()) {
-            return new MoveTransition(this.board, move, MoveStatus.LEAVES_PLAYER_IN_CHECK);
-        }
-        return new MoveTransition(transitionBoard, move, MoveStatus.DONE);
+        final Board transitionedBoard = move.execute();
+        return transitionedBoard.currentPlayer().getOpponent().isInCheck() ?
+                new MoveTransition(this.board, this.board, move, MoveStatus.LEAVES_PLAYER_IN_CHECK) :
+                new MoveTransition(this.board, transitionedBoard, move, MoveStatus.DONE);
+    }
+
+    public MoveTransition unMakeMove(final Move move) {
+        return new MoveTransition(this.board, move.undo(), move, MoveStatus.DONE);
     }
 
     public abstract Collection<Piece> getActivePieces();

@@ -93,6 +93,14 @@ public abstract class Move {
         return builder.build();
     }
 
+    public Board undo() {
+        final Board.Builder builder = new Builder();
+        for (final Piece piece : this.board.getAllPieces()) {
+            builder.setPiece(piece);
+        }
+        builder.setMoveMaker(this.board.currentPlayer().getAlliance());
+        return builder.build();
+    }
 
     public static class AttackMove extends Move {
         final Piece attackedPiece;

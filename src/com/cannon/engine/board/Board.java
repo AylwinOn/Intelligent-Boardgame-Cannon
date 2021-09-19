@@ -11,6 +11,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Board {
 
@@ -64,6 +66,10 @@ public class Board {
 
     public Collection<Piece> getLightPieces() {
         return this.lightPieces;
+    }
+
+    public Iterable<Piece> getAllPieces() {
+        return Iterables.unmodifiableIterable(Iterables.concat(this.lightPieces, this.darkPieces));
     }
 
 

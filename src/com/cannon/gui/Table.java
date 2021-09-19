@@ -11,10 +11,7 @@ import com.google.common.collect.Lists;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -32,20 +29,21 @@ public class Table {
     private final BoardPanel boardPanel;
     private final MoveLog moveLog;
     private Board cannonBoard;
-
     private Tile sourceTile;
     private Tile destinationTile;
     private Piece humanMovedPiece;
     private BoardDirection boardDirection;
     private boolean highlightLegalMoves;
 
-    private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(800,800);
+    private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(800,700);
     private final static Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
     private final static Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
     private static String defaultPieceImagesPath = "art/pieces/plain/";
 
     private final Color darkGapColor = Color.BLACK;
     private final Color lightTileColor = Color.decode("#d8b27e");
+
+    private static final Table INSTANCE = new Table();
 
 
     public Table() {
@@ -68,10 +66,19 @@ public class Table {
         this.gameframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
+    public void show() {
+        Table.get().getMoveLog().clear();
+        Table.get().getGameHistoryPanel().redo(cannonBoard, Table.get().getMoveLog());
+        Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
+        Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
+    }
+
+
     private JMenuBar createTableMenuBar() {
         final JMenuBar tableMenuBar = new JMenuBar();
         tableMenuBar.add(createFileMenu());
         tableMenuBar.add(createPreferencesMenu());
+        tableMenuBar.add(createOptionsMenu());
         return tableMenuBar;
     }
 
@@ -119,6 +126,22 @@ public class Table {
         return preferencesMenu;
     }
 
+    private JMenu createOptionsMenu() {
+        final JMenu optionsMenu = new JMenu("Options");
+        final JMenuItem undoMoveMenuItem = new JMenuItem("Undo last move");
+        undoMoveMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                if(moveLog.size() > 0) {
+                    undoLastMove();
+                }
+            }
+        });
+        optionsMenu.add(undoMoveMenuItem);
+        return optionsMenu;
+    }
+
+
     public enum BoardDirection {
         NORMAL {
             @Override
@@ -144,6 +167,15 @@ public class Table {
         };
         abstract List<TilePanel> traverse(final List<TilePanel> boardTiles);
         abstract BoardDirection opposite();
+    }
+
+    private void undoLastMove() {
+        final Move lastMove = this.moveLog.removeMove(this.moveLog.size() - 1);
+        this.cannonBoard = this.cannonBoard.currentPlayer().unMakeMove(lastMove).getToBoard();
+        Table.get().getMoveLog().removeMove(lastMove);
+        Table.get().getGameHistoryPanel().redo(cannonBoard, Table.get().getMoveLog());
+        Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
+        Table.get().getBoardPanel().drawBoard(cannonBoard);
     }
 
 
@@ -234,7 +266,7 @@ public class Table {
                             final Move move = Move.MoveFactory.createMove(cannonBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
                             final MoveTransition transition = cannonBoard.currentPlayer().makeMove(move);
                             if(transition.getMoveStatus().isDone()) {
-                                cannonBoard = transition.getTransitionBoard();
+                                cannonBoard = transition.getToBoard();
                                 moveLog.addMove(move);
                             }
                             sourceTile = null;
@@ -316,5 +348,33 @@ public class Table {
             }
             return Collections.emptyList();
         }
+    }
+
+    public static Table get() {
+        return INSTANCE;
+    }
+
+    private JFrame getGameFrame() {
+        return this.gameframe;
+    }
+
+    Board getGameBoard() {
+        return this.cannonBoard;
+    }
+
+    MoveLog getMoveLog() {
+        return this.moveLog;
+    }
+
+    BoardPanel getBoardPanel() {
+        return this.boardPanel;
+    }
+
+    GameHistoryPanel getGameHistoryPanel() {
+        return this.gameHistoryPanel;
+    }
+
+    TakenPiecesPanel getTakenPiecesPanel() {
+        return this.takenPiecesPanel;
     }
 }
