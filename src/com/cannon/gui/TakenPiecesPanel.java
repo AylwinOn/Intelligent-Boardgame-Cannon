@@ -28,8 +28,8 @@ public class TakenPiecesPanel extends JPanel {
         super(new BorderLayout());
 
         this.setBorder(PANEL_BORDER);
-        this.northPanel = new JPanel(new GridLayout(8, 2));
-        this.southPanel = new JPanel(new GridLayout(8, 2));
+        this.northPanel = new JPanel(new GridLayout(16, 1));
+        this.southPanel = new JPanel(new GridLayout(16, 1));
         this.add(this.northPanel, BorderLayout.NORTH);
         this.add(this.southPanel, BorderLayout.SOUTH);
         setPreferredSize(TAKEN_PIECES_DIMENSION);

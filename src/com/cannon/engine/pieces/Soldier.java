@@ -119,7 +119,7 @@ public class Soldier extends Piece {
                 final Piece pieceOnCandidateUP2 = board.getTile(candidateNeighbourCoordinateUP2).getPiece();
                 if(this.pieceAlliance == pieceOnCandidateUP.getPieceAlliance() && this.pieceAlliance == pieceOnCandidateUP2.getPieceAlliance()
                         && this.pieceType == pieceOnCandidateUP.getPieceType() && this.pieceType == pieceOnCandidateUP2.getPieceType()) {
-                    if(!board.getTile(candidateNeighbourCoordinateUP3).isTileOccupied()) {
+                    if(candidateNeighbourCoordinateUP3 > 0 && candidateNeighbourCoordinateUP3 < 100 && !board.getTile(candidateNeighbourCoordinateUP3).isTileOccupied()) {
                         legalMoves.add(new CannonSlideMove(board, this, candidateNeighbourCoordinateUP3));
                     }
                 }
@@ -130,7 +130,8 @@ public class Soldier extends Piece {
                 final Piece pieceOnCandidateDOWN2 = board.getTile(candidateNeighbourCoordinateDOWN2).getPiece();
                 if(this.pieceAlliance == pieceOnCandidateDOWN.getPieceAlliance() && this.pieceAlliance == pieceOnCandidateDOWN2.getPieceAlliance()
                         && this.pieceType == pieceOnCandidateDOWN.getPieceType() && this.pieceType == pieceOnCandidateDOWN2.getPieceType()) {
-                    if(!board.getTile(candidateNeighbourCoordinateDOWN3).isTileOccupied()) {
+                    System.out.println(candidateNeighbourCoordinateDOWN3);
+                    if(candidateNeighbourCoordinateDOWN3 > 0 && candidateNeighbourCoordinateDOWN3 < 100 && !board.getTile(candidateNeighbourCoordinateDOWN3).isTileOccupied()) {
                         legalMoves.add(new CannonSlideMove(board, this, candidateNeighbourCoordinateDOWN3));
                     }
                 }
