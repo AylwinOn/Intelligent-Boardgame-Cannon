@@ -143,7 +143,10 @@ public class Soldier extends Piece {
             if(candidateUnderAttackCoordinate > 0 && candidateUnderAttackCoordinate < 100 && board.getTile(candidateUnderAttackCoordinate).isTileOccupied()) {
                 final Piece pieceOnCandidate = board.getTile(candidateUnderAttackCoordinate).getPiece();
                 if(this.pieceAlliance != pieceOnCandidate.getPieceAlliance() && this.pieceType == pieceOnCandidate.getPieceType()) {
-                    underAttack = true;
+                    if(!((BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[pieceOnCandidate.piecePosition]) ||
+                         (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[pieceOnCandidate.piecePosition]))) {
+                        underAttack = true;
+                    }
                 }
             }
         }
@@ -206,7 +209,11 @@ public class Soldier extends Piece {
                     }
                 }
             } else if (currentCandidateOffset == -20 && underAttack &&
-                    !board.getTile(candidateIntermediateCoordinate).isTileOccupied() && !board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
+                    !board.getTile(candidateIntermediateCoordinate).isTileOccupied() && !board.getTile(candidateDestinationCoordinate).isTileOccupied() &&
+                    !((BoardUtils.TENTH_COLUMN[this.piecePosition] && this.pieceAlliance.isLight()) ||
+                     (BoardUtils.NINTH_COLUMN[this.piecePosition] && this.pieceAlliance.isLight()) ||
+                     (BoardUtils.FIRST_COLUMN[this.piecePosition] && this.pieceAlliance.isDark()) ||
+                     (BoardUtils.SECOND_COLUMN[this.piecePosition] && this.pieceAlliance.isDark()))) {
                 legalMoves.add(new SoldierRetreatMove(board, this, candidateDestinationCoordinate));
             } else if (currentCandidateOffset == -18 && underAttack &&
                     !board.getTile(candidateIntermediateCoordinate).isTileOccupied() && !board.getTile(candidateDestinationCoordinate).isTileOccupied() &&
