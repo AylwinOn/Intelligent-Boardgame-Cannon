@@ -23,6 +23,7 @@ public class Board {
     private final LightPlayer lightPlayer;
     private final DarkPlayer darkPlayer;
     private final Player currentPlayer;
+    private final Soldier cannonSoldier;
 
     public Board(final Builder builder) {
         this.gameBoard = createGameBoard(builder);
@@ -33,6 +34,7 @@ public class Board {
         this.lightPlayer = new LightPlayer(this, lightStandardLegalMoves, darkStandardLegalMoves);
         this.darkPlayer = new DarkPlayer(this, lightStandardLegalMoves, darkStandardLegalMoves);
         this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.lightPlayer, this.darkPlayer);
+        this.cannonSoldier = builder.cannonSoldier;
     }
 
     @Override
@@ -157,6 +159,7 @@ public class Board {
 
         Map<Integer, Piece> boardConfig;
         Alliance nextMoveMaker;
+        Soldier cannonSoldier;
 
         public Builder(){
             this.boardConfig = new HashMap<>();
@@ -169,6 +172,11 @@ public class Board {
 
         public Builder setMoveMaker(final Alliance nextMoveMaker) {
             this.nextMoveMaker = nextMoveMaker;
+            return this;
+        }
+
+        public Builder setCannonAttackMove(final Soldier cannonSoldier) {
+            this.cannonSoldier = cannonSoldier;
             return this;
         }
 

@@ -1,6 +1,7 @@
 package com.cannon.engine.board;
 
 import com.cannon.engine.pieces.Piece;
+import com.cannon.engine.pieces.Soldier;
 import com.cannon.engine.pieces.Town;
 
 import static com.cannon.engine.board.Board.*;
@@ -260,6 +261,33 @@ public abstract class Move {
         public String toString() {
             return BoardUtils.getPositionAtCoordinate(this.movedPiece.getPiecePosition()).substring(0,  1) + "x" +
                    BoardUtils.getPositionAtCoordinate(this.destinationCoordinate);
+        }
+
+        public Board execute() {
+            final Board.Builder builder = new Builder();
+            for (final Piece piece : this.board.currentPlayer().getActivePieces()) {
+                if (!this.movedPiece.equals(piece)) {
+                    builder.setPiece(piece);
+                }
+            }
+            for (final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
+                if(!piece.equals(this.getAttackedPiece())) {
+                    builder.setPiece(piece);
+                }
+            }
+            builder.setPiece(this.movedPiece.movePiece(this));
+            builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
+            return builder.build();
+        }
+
+        public Board undo() {
+            final Board.Builder builder = new Builder();
+            for (final Piece piece : this.board.getAllPieces()) {
+                builder.setPiece(piece);
+            }
+            builder.setCannonAttackMove((Soldier)this.getAttackedPiece());
+            builder.setMoveMaker(this.board.currentPlayer().getAlliance());
+            return builder.build();
         }
     }
 

@@ -57,7 +57,7 @@ public class Soldier extends Piece {
                                      (BoardUtils.SECOND_COLUMN[this.piecePosition] && BoardUtils.NINTH_COLUMN[candidateCannonAttackCoordinateUP]) ||
                                      (BoardUtils.EIGHT_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateCannonAttackCoordinateUP]) ||
                                      (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.EIGHT_COLUMN[candidateCannonAttackCoordinateUP]))){
-                                    legalMoves.add(new CannonAttackMove(board, this, candidateCannonAttackCoordinateUP, pieceOnCandidateCannonUP));
+                                    legalMoves.add(new CannonAttackMove(board, this, this.piecePosition, pieceOnCandidateCannonUP));
                                 }
                             }
                         } else if(candidateCannonAttackCoordinateUP > 0 && candidateCannonAttackCoordinateUP < 100 && !board.getTile(candidateCannonAttackCoordinateUP).isTileOccupied()) {
@@ -72,7 +72,7 @@ public class Soldier extends Piece {
                                          (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.NINTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
                                          (BoardUtils.SECOND_COLUMN[this.piecePosition] && BoardUtils.EIGHT_COLUMN[candidateCannonAttackCoordinateUP2]) ||
                                          (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateUP2]) )) {
-                                        legalMoves.add(new CannonAttackMove(board, this, candidateCannonAttackCoordinateUP2, pieceOnCandidateCannonUP2));
+                                        legalMoves.add(new CannonAttackMove(board, this, this.piecePosition, pieceOnCandidateCannonUP2));
                                     }
                                 }
                             }
@@ -90,7 +90,7 @@ public class Soldier extends Piece {
                                      (BoardUtils.SECOND_COLUMN[this.piecePosition] && BoardUtils.NINTH_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
                                      (BoardUtils.EIGHT_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
                                      (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.EIGHT_COLUMN[candidateCannonAttackCoordinateDOWN]))) {
-                                    legalMoves.add(new CannonAttackMove(board, this, candidateCannonAttackCoordinateDOWN, pieceOnCandidateCannonDOWN));
+                                    legalMoves.add(new CannonAttackMove(board, this, this.piecePosition, pieceOnCandidateCannonDOWN));
                                 }
                             }
                         } else if(candidateCannonAttackCoordinateDOWN > 0 && candidateCannonAttackCoordinateDOWN < 100 && !board.getTile(candidateCannonAttackCoordinateDOWN).isTileOccupied()) {
@@ -105,7 +105,7 @@ public class Soldier extends Piece {
                                          (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.NINTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
                                          (BoardUtils.SECOND_COLUMN[this.piecePosition] && BoardUtils.EIGHT_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
                                          (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) )) {
-                                        legalMoves.add(new CannonAttackMove(board, this, candidateCannonAttackCoordinateDOWN2, pieceOnCandidateCannonDOWN2));
+                                        legalMoves.add(new CannonAttackMove(board, this, this.piecePosition, pieceOnCandidateCannonDOWN2));
                                     }
                                 }
                             }

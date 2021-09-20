@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -36,12 +37,13 @@ public class Table {
     private boolean highlightLegalMoves;
 
     private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(800,700);
-    private final static Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
+    private final static Dimension BOARD_PANEL_DIMENSION = new Dimension(800, 800);
     private final static Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
     private static String defaultPieceImagesPath = "art/pieces/plain/";
 
     private final Color darkGapColor = Color.BLACK;
     private final Color lightTileColor = Color.decode("#d8b27e");
+    private final Color darkOuterBoardColor = Color.decode("#432616");
 
     private static final Table INSTANCE = new Table();
 
@@ -56,14 +58,16 @@ public class Table {
         this.gameHistoryPanel = new GameHistoryPanel();
         this.takenPiecesPanel = new TakenPiecesPanel();
         this.boardPanel = new BoardPanel();
+        this.boardPanel.setBorder(BorderFactory.createLineBorder(darkGapColor));
         this.moveLog = new MoveLog();
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = false;
-        this.gameframe.add(this.takenPiecesPanel, BorderLayout.WEST);
-        this.gameframe.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameframe.add(this.boardPanel, BorderLayout.CENTER);
+        this.gameframe.add(this.takenPiecesPanel, BorderLayout.SOUTH);
+        this.gameframe.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameframe.setVisible(true);
         this.gameframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
     }
 
     public void show() {
@@ -115,7 +119,7 @@ public class Table {
         });
         preferencesMenu.add(flipBoardMenuItem);
         preferencesMenu.addSeparator();
-        final JCheckBoxMenuItem legalMoveHighLighterCheckbox = new JCheckBoxMenuItem("Highlight Legal MOves", false);
+        final JCheckBoxMenuItem legalMoveHighLighterCheckbox = new JCheckBoxMenuItem("Highlight Legal Moves", false);
         legalMoveHighLighterCheckbox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -186,9 +190,9 @@ public class Table {
             this.boardTiles = new ArrayList<>();
             for(int i = 0; i < BoardUtils.NUM_TILES; i++) {
                 final TilePanel tilePanel = new TilePanel(this, i);
+                this.boardTiles.add(tilePanel);
                 tilePanel.setBackground(lightTileColor);
                 tilePanel.setBorder(BorderFactory.createLineBorder(darkGapColor));
-                this.boardTiles.add(tilePanel);
                 add(tilePanel);
             }
             setPreferredSize(BOARD_PANEL_DIMENSION);
@@ -263,6 +267,7 @@ public class Table {
                             }
                         } else {
                             destinationTile = cannonBoard.getTile(tileId);
+
                             final Move move = Move.MoveFactory.createMove(cannonBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
                             final MoveTransition transition = cannonBoard.currentPlayer().makeMove(move);
                             if(transition.getMoveStatus().isDone()) {
@@ -376,5 +381,23 @@ public class Table {
 
     TakenPiecesPanel getTakenPiecesPanel() {
         return this.takenPiecesPanel;
+    }
+
+    private JPanel createColumnPanel() {
+        JPanel filePanel = new JPanel(new GridLayout(1, 0));
+        for (int i = 0; i < 10; i++) {
+            char fileChar = (char) ('A' + i);
+            filePanel.add(new JLabel(String.valueOf(fileChar), SwingConstants.CENTER));
+        }
+        return filePanel;
+    }
+
+    private JPanel createRankPanel() {
+        JPanel rankPanel = new JPanel(new GridLayout(0, 1));
+        for (int i = 0; i < 10; i++) {
+            int row = 10 - i;
+            rankPanel.add(new JLabel(String.valueOf(row)));
+        }
+        return rankPanel;
     }
 }

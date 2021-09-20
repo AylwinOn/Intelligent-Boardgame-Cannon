@@ -23,7 +23,7 @@ public class GameHistoryPanel extends JPanel {
         this.setLayout(new BorderLayout());
         this.model = new DataModel();
         final JTable table = new JTable(model);
-        table.setRowHeight(15);
+        table.setRowHeight(20);
         this.scrollPane = new JScrollPane(table);
         scrollPane.setColumnHeaderView(table.getTableHeader());
         scrollPane.setPreferredSize(HISTORY_PANEL_DIMENSION);

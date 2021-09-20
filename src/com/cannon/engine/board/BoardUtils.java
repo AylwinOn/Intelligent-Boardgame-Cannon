@@ -28,7 +28,7 @@ public class BoardUtils {
     public static final int NUM_TILES_PER_ROW = 10;
 
 
-    private static String[] initializeAlgebreicNotation() {
+    public static String[] initializeAlgebreicNotation() {
         return new String[] {
                 "A10", "B10", "C10", "D10", "E10", "F10", "G10", "H10", "I10", "J10",
                 "A9", "B9", "C9", "D9", "E9", "F9", "G9", "H9", "I9", "J9",
