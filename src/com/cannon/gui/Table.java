@@ -5,36 +5,38 @@ import com.cannon.engine.board.BoardUtils;
 import com.cannon.engine.board.Move;
 import com.cannon.engine.board.Tile;
 import com.cannon.engine.pieces.Piece;
+import com.cannon.engine.player.AI.MiniMax;
+import com.cannon.engine.player.AI.MoveStrategy;
 import com.cannon.engine.player.MoveTransition;
 import com.google.common.collect.Lists;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
 import static javax.swing.SwingUtilities.*;
 
-public class Table {
+public class Table extends Observable {
     private final JFrame gameframe;
     private final GameHistoryPanel gameHistoryPanel;
     private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
     private final MoveLog moveLog;
+    private final GameSetup gameSetup;
     private Board cannonBoard;
     private Tile sourceTile;
     private Tile destinationTile;
     private Piece humanMovedPiece;
     private BoardDirection boardDirection;
     private boolean highlightLegalMoves;
+    private Move computerMove;
 
     private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(800,700);
     private final static Dimension BOARD_PANEL_DIMENSION = new Dimension(800, 800);
@@ -48,7 +50,7 @@ public class Table {
     private static final Table INSTANCE = new Table();
 
 
-    public Table() {
+    private Table() {
         this.gameframe = new JFrame("Cannon");
         this.gameframe.setLayout(new BorderLayout());
         final JMenuBar tableMenuBar = createTableMenuBar();
@@ -60,10 +62,12 @@ public class Table {
         this.boardPanel = new BoardPanel();
         this.boardPanel.setBorder(BorderFactory.createLineBorder(darkGapColor));
         this.moveLog = new MoveLog();
+        this.addObserver(new TableGameAIWatcher());
+        this.gameSetup = new GameSetup(this.gameframe, true);
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = false;
         this.gameframe.add(this.boardPanel, BorderLayout.CENTER);
-        this.gameframe.add(this.takenPiecesPanel, BorderLayout.SOUTH);
+        this.gameframe.add(this.takenPiecesPanel, BorderLayout.WEST);
         this.gameframe.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameframe.setVisible(true);
         this.gameframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -83,6 +87,7 @@ public class Table {
         tableMenuBar.add(createFileMenu());
         tableMenuBar.add(createPreferencesMenu());
         tableMenuBar.add(createOptionsMenu());
+        tableMenuBar.add(createAIMenu());
         return tableMenuBar;
     }
 
@@ -145,6 +150,21 @@ public class Table {
         return optionsMenu;
     }
 
+    private JMenu createAIMenu() {
+        final JMenu AIMenu = new JMenu("AI");
+        final JMenuItem setupGameMenuItem = new JMenuItem("Setup Game");
+        setupGameMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Table.get().getGameSetup().promptUser();
+                Table.get().setupUpdate(Table.get().getGameSetup());
+
+            }
+        });
+        AIMenu.add(setupGameMenuItem);
+        return AIMenu;
+    }
+
 
     public enum BoardDirection {
         NORMAL {
@@ -175,7 +195,7 @@ public class Table {
 
     private void undoLastMove() {
         final Move lastMove = this.moveLog.removeMove(this.moveLog.size() - 1);
-        this.cannonBoard = this.cannonBoard.currentPlayer().unMakeMove(lastMove).getToBoard();
+        this.cannonBoard = this.cannonBoard.currentPlayer().unMakeMove(lastMove).getTransitionBoard();
         Table.get().getMoveLog().removeMove(lastMove);
         Table.get().getGameHistoryPanel().redo(cannonBoard, Table.get().getMoveLog());
         Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
@@ -241,6 +261,11 @@ public class Table {
         }
     }
 
+    enum PlayerType {
+        HUMAN,
+        COMPUTER
+    }
+
 
 
     private class TilePanel extends JPanel {
@@ -271,7 +296,7 @@ public class Table {
                             final Move move = Move.MoveFactory.createMove(cannonBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
                             final MoveTransition transition = cannonBoard.currentPlayer().makeMove(move);
                             if(transition.getMoveStatus().isDone()) {
-                                cannonBoard = transition.getToBoard();
+                                cannonBoard = transition.getTransitionBoard();
                                 moveLog.addMove(move);
                             }
                             sourceTile = null;
@@ -283,6 +308,9 @@ public class Table {
                             public void run() {
                                 gameHistoryPanel.redo(cannonBoard, moveLog);
                                 takenPiecesPanel.redo(moveLog);
+                                if(gameSetup.isAIPlayer(cannonBoard.currentPlayer())) {
+                                    Table.get().moveMadeUpdate(PlayerType.HUMAN);
+                                }
                                 boardPanel.drawBoard(cannonBoard);
                             }
                         });
@@ -359,28 +387,96 @@ public class Table {
         return INSTANCE;
     }
 
+    private GameSetup getGameSetup() {
+        return this.gameSetup;
+    }
+
+    private void setupUpdate(final GameSetup gameSetup) {
+        setChanged();
+        notifyObservers(gameSetup);
+    }
+
+
+    private static class TableGameAIWatcher implements Observer {
+        @Override
+        public void update(final Observable o, final Object arg) {
+            if(Table.get().getGameSetup().isAIPlayer(Table.get().getGameBoard().currentPlayer()) &&
+            !Table.get().getGameBoard().currentPlayer().isInCheck()) {
+                System.out.println(Table.get().getGameBoard().currentPlayer() + " is set to AI, thinking....");
+                final AIThinkTank thinkTank = new AIThinkTank();
+                thinkTank.execute();
+            }
+            if(Table.get().getGameBoard().currentPlayer().isInCheck()) {
+                JOptionPane.showMessageDialog(Table.get().getBoardPanel(),
+                        "Game Over: Player " + Table.get().getGameBoard().currentPlayer() + " is in checkmate!", "Game Over",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
+    private static class AIThinkTank extends SwingWorker<Move, String> {
+        private AIThinkTank() {
+        }
+
+        @Override
+        protected Move doInBackground() throws Exception {
+            final MoveStrategy miniMax = new MiniMax(Table.get().getGameSetup().getSearchDepth());
+            final Move bestMove = miniMax.execute(Table.get().getGameBoard());
+            return bestMove;
+        }
+
+        @Override
+        public void done() {
+            try {
+                final Move bestMove = get();
+                Table.get().updateComputerMove(bestMove);
+                Table.get().updateGameBoard(Table.get().getGameBoard().currentPlayer().makeMove(bestMove).getTransitionBoard());
+                Table.get().getMoveLog().addMove(bestMove);
+                Table.get().getGameHistoryPanel().redo(Table.get().getGameBoard(), Table.get().getMoveLog());
+                Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
+                Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
+                Table.get().moveMadeUpdate(PlayerType.COMPUTER);
+            } catch (final Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private JFrame getGameFrame() {
         return this.gameframe;
     }
 
-    Board getGameBoard() {
+    private Board getGameBoard() {
         return this.cannonBoard;
     }
 
-    MoveLog getMoveLog() {
+    private MoveLog getMoveLog() {
         return this.moveLog;
     }
 
-    BoardPanel getBoardPanel() {
+    private BoardPanel getBoardPanel() {
         return this.boardPanel;
     }
 
-    GameHistoryPanel getGameHistoryPanel() {
+    private GameHistoryPanel getGameHistoryPanel() {
         return this.gameHistoryPanel;
     }
 
-    TakenPiecesPanel getTakenPiecesPanel() {
+    private TakenPiecesPanel getTakenPiecesPanel() {
         return this.takenPiecesPanel;
+    }
+
+    public void updateGameBoard(final Board board) {
+        this.cannonBoard = board;
+    }
+
+    public void updateComputerMove(final Move move) {
+        this.computerMove = move;
+    }
+
+    private void moveMadeUpdate(final PlayerType playerType) {
+        setChanged();
+        notifyObservers(playerType);
     }
 
     private JPanel createColumnPanel() {

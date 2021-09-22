@@ -3,33 +3,23 @@ package com.cannon.engine.player;
 import com.cannon.engine.board.Board;
 import com.cannon.engine.board.Move;
 
+
 public final class MoveTransition {
 
-    private final Board fromBoard;
-    private final Board toBoard;
-    private final Move transitionMove;
+    private final Board transitionBoard;
+    private final Move move;
     private final MoveStatus moveStatus;
 
-    public MoveTransition(final Board fromBoard,
-                          final Board toBoard,
-                          final Move transitionMove,
+    public MoveTransition(final Board transitionBoard,
+                          final Move move,
                           final MoveStatus moveStatus) {
-        this.fromBoard = fromBoard;
-        this.toBoard = toBoard;
-        this.transitionMove = transitionMove;
+        this.transitionBoard = transitionBoard;
+        this.move = move;
         this.moveStatus = moveStatus;
     }
 
-    public Board getFromBoard() {
-        return this.fromBoard;
-    }
-
-    public Board getToBoard() {
-        return this.toBoard;
-    }
-
-    public Move getTransitionMove() {
-        return this.transitionMove;
+    public Board getTransitionBoard() {
+        return this.transitionBoard;
     }
 
     public MoveStatus getMoveStatus() {
