@@ -4,6 +4,7 @@ import com.cannon.engine.Alliance;
 import com.cannon.engine.board.Board;
 import com.cannon.engine.board.BoardUtils;
 import com.cannon.engine.board.Move;
+import com.cannon.engine.player.Player;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class Soldier extends Piece {
     private final static int[] NEIGHBOUR_COORDINATES = {10, 9, 11, 1};
 
     public Soldier(final Alliance pieceAlliance, final int piecePosition) {
-        super(PieceType.SOLDIER, piecePosition, pieceAlliance, true);
+        super(PieceType.SOLDIER, piecePosition, pieceAlliance, false);
     }
 
 

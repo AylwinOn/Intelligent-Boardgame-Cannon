@@ -8,6 +8,11 @@ public final class StandardBoardEvaluator implements BoardEvaluator {
 
     private static final int CHECK_BONUS = 10000;
     private static final int DEPTH_BONUS = 100;
+    private static final StandardBoardEvaluator INSTANCE = new StandardBoardEvaluator();
+
+    public static StandardBoardEvaluator get() {
+        return INSTANCE;
+    }
 
     @Override
     public int evaluate(final Board board, final int depth) {

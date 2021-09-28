@@ -72,17 +72,17 @@ public abstract class Player {
 
 
     public MoveTransition makeMove(final Move move) {
-        if (!this.legalMoves.contains(move)) {
-            return new MoveTransition(this.board, move, MoveStatus.ILLEGAL_MOVE);
+        if (!isMoveLegal(move)) {
+            return new MoveTransition(this.board, this.board, move, MoveStatus.ILLEGAL_MOVE);
         }
         final Board transitionedBoard = move.execute();
         return transitionedBoard.currentPlayer().getOpponent().isInCheck() ?
-                new MoveTransition(this.board, move, MoveStatus.LEAVES_PLAYER_IN_CHECK) :
-                new MoveTransition(transitionedBoard, move, MoveStatus.DONE);
+                new MoveTransition(this.board, this.board, move, MoveStatus.LEAVES_PLAYER_IN_CHECK) :
+                new MoveTransition(this.board, transitionedBoard, move, MoveStatus.DONE);
     }
 
     public MoveTransition unMakeMove(final Move move) {
-        return new MoveTransition(move.undo(), move, MoveStatus.DONE);
+        return new MoveTransition(this.board, move.undo(), move, MoveStatus.DONE);
     }
 
     public abstract Collection<Piece> getActivePieces();

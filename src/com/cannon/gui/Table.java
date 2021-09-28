@@ -5,6 +5,7 @@ import com.cannon.engine.board.BoardUtils;
 import com.cannon.engine.board.Move;
 import com.cannon.engine.board.Tile;
 import com.cannon.engine.pieces.Piece;
+import com.cannon.engine.player.AI.AlphaBetaWithMoveOrdering;
 import com.cannon.engine.player.AI.MiniMax;
 import com.cannon.engine.player.AI.MoveStrategy;
 import com.cannon.engine.player.MoveTransition;
@@ -195,7 +196,7 @@ public class Table extends Observable {
 
     private void undoLastMove() {
         final Move lastMove = this.moveLog.removeMove(this.moveLog.size() - 1);
-        this.cannonBoard = this.cannonBoard.currentPlayer().unMakeMove(lastMove).getTransitionBoard();
+        this.cannonBoard = this.cannonBoard.currentPlayer().unMakeMove(lastMove).getToBoard();
         Table.get().getMoveLog().removeMove(lastMove);
         Table.get().getGameHistoryPanel().redo(cannonBoard, Table.get().getMoveLog());
         Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
@@ -296,7 +297,7 @@ public class Table extends Observable {
                             final Move move = Move.MoveFactory.createMove(cannonBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
                             final MoveTransition transition = cannonBoard.currentPlayer().makeMove(move);
                             if(transition.getMoveStatus().isDone()) {
-                                cannonBoard = transition.getTransitionBoard();
+                                cannonBoard = transition.getToBoard();
                                 moveLog.addMove(move);
                             }
                             sourceTile = null;
@@ -418,10 +419,17 @@ public class Table extends Observable {
         private AIThinkTank() {
         }
 
+//        @Override
+//        protected Move doInBackground() throws Exception {
+//            final MoveStrategy miniMax = new MiniMax(Table.get().getGameSetup().getSearchDepth());
+//            final Move bestMove = miniMax.execute(Table.get().getGameBoard());
+//            return bestMove;
+//        }
+
         @Override
         protected Move doInBackground() throws Exception {
-            final MoveStrategy miniMax = new MiniMax(Table.get().getGameSetup().getSearchDepth());
-            final Move bestMove = miniMax.execute(Table.get().getGameBoard());
+            final MoveStrategy alphaBeta = new AlphaBetaWithMoveOrdering(Table.get().getGameSetup().getSearchDepth(), 5);
+            final Move bestMove = alphaBeta.execute(Table.get().getGameBoard());
             return bestMove;
         }
 
@@ -430,7 +438,7 @@ public class Table extends Observable {
             try {
                 final Move bestMove = get();
                 Table.get().updateComputerMove(bestMove);
-                Table.get().updateGameBoard(Table.get().getGameBoard().currentPlayer().makeMove(bestMove).getTransitionBoard());
+                Table.get().updateGameBoard(Table.get().getGameBoard().currentPlayer().makeMove(bestMove).getToBoard());
                 Table.get().getMoveLog().addMove(bestMove);
                 Table.get().getGameHistoryPanel().redo(Table.get().getGameBoard(), Table.get().getMoveLog());
                 Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());

@@ -89,7 +89,11 @@ public class Board {
             if(tile.isTileOccupied()) {
                 final Piece piece = tile.getPiece();
                 if(piece.getPieceAlliance() == alliance) {
-                    activePieces.add(piece);
+                    if(piece.isFirstMove()) {
+                        activePieces.add(piece);
+                    } else {
+                        activePieces.add(piece);
+                    }
                 }
             }
         }

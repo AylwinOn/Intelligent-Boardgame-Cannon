@@ -313,6 +313,9 @@ public abstract class Move {
         private MoveFactory() {
             throw new RuntimeException("Not instantiable");
         }
+        public static Move getNullMove() {
+            return NULL_MOVE;
+        }
 
         public static Move createMove(final Board board,
                                       final int currentCoordinate,

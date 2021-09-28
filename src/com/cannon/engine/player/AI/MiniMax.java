@@ -37,8 +37,8 @@ public class MiniMax implements MoveStrategy{
             final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
             if(moveTransition.getMoveStatus().isDone()) {
                 currentValue = board.currentPlayer().getAlliance().isLight() ?
-                        min(moveTransition.getTransitionBoard(), this.searchDepth - 1) :
-                        max(moveTransition.getTransitionBoard(), this.searchDepth - 1);
+                        min(moveTransition.getToBoard(), this.searchDepth - 1) :
+                        max(moveTransition.getToBoard(), this.searchDepth - 1);
 
                 if(board.currentPlayer().getAlliance().isLight() && currentValue >= highestSeenValue) {
                     highestSeenValue = currentValue;
@@ -64,7 +64,7 @@ public class MiniMax implements MoveStrategy{
         for(final Move move : board.currentPlayer().getLegalMoves()) {
             final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
             if(moveTransition.getMoveStatus().isDone()) {
-                final int currentValue = max(moveTransition.getTransitionBoard(), depth - 1);
+                final int currentValue = max(moveTransition.getToBoard(), depth - 1);
                 if(currentValue <= lowestSeenValue) {
                     lowestSeenValue = currentValue;
                 }
@@ -82,7 +82,7 @@ public class MiniMax implements MoveStrategy{
         for(final Move move : board.currentPlayer().getLegalMoves()) {
             final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
             if(moveTransition.getMoveStatus().isDone()) {
-                final int currentValue = min(moveTransition.getTransitionBoard(), depth - 1);
+                final int currentValue = min(moveTransition.getToBoard(), depth - 1);
                 if(currentValue <= highestSeenValue) {
                     highestSeenValue = currentValue;
                 }

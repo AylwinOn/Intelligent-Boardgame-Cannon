@@ -43,6 +43,10 @@ public class BoardUtils {
         };
     }
 
+    public static boolean isThreatenedBoardImmediate(final Board board) {
+        return board.lightPlayer().isInCheck() || board.darkPlayer().isInCheck();
+    }
+
     private static Map<String, Integer> initializePositionToCoordinateMap() {
         final Map<String, Integer> positionToCoordinate = new HashMap<>();
         for(int i = 0; i < NUM_TILES; i++) {
@@ -79,5 +83,9 @@ public class BoardUtils {
 
     public static String getPositionAtCoordinate(final int coordinate) {
         return ALGEBREIC_NOTATION[coordinate];
+    }
+
+    public static boolean isEndGame(final Board board) {
+        return board.lightPlayer().isInCheck() || board.darkPlayer().isInCheck();
     }
 }
