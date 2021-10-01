@@ -7,12 +7,11 @@ import com.cannon.engine.board.BoardUtils;
 import com.cannon.engine.board.Move;
 import com.cannon.engine.player.MoveTransition;
 import com.cannon.engine.player.Player;
+import com.cannon.pgn.FenUtilities;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Observable;
+import java.util.*;
 
 import static com.cannon.engine.board.Move.*;
 
@@ -26,6 +25,22 @@ public class AlphaBetaWithMoveOrdering extends Observable implements MoveStrateg
     private long executionTime;
     private int quiescenceCount;
     private int cutOffsProduced;
+    private int highestSeenValue = Integer.MIN_VALUE;
+    private int lowestSeenValue = Integer.MAX_VALUE;
+    private int nodesExplored = 0;
+    private int depthExplored = 0;
+    private Map<String,tableNode> transposition = new HashMap<>();
+
+    private class tableNode{
+        protected int score;
+        protected int depth;
+        protected int flag; // 0 is exact, 1 is upper bound and -1 is lower bound
+        public tableNode(Move bestMove, int score, int depth, int flag){
+            this.score = score;
+            this.depth = depth;
+            this.flag = flag;
+        }
+    }
 
     private enum MoveSorter {
 
@@ -73,8 +88,6 @@ public class AlphaBetaWithMoveOrdering extends Observable implements MoveStrateg
         final Player currentPlayer = board.currentPlayer();
         final Alliance alliance = currentPlayer.getAlliance();
         Move bestMove = MoveFactory.getNullMove();
-        int highestSeenValue = Integer.MIN_VALUE;
-        int lowestSeenValue = Integer.MAX_VALUE;
         int currentValue;
         int moveCounter = 1;
         final int numMoves = this.moveSorter.sort(board.currentPlayer().getLegalMoves()).size();
@@ -120,32 +133,63 @@ public class AlphaBetaWithMoveOrdering extends Observable implements MoveStrateg
     }
 
     public int max(final Board board,
-                   final int depth,
-                   final int highest,
-                   final int lowest) {
+                   int depth,
+                   int highest,
+                   int lowest) {
+        int olda = lowest;
+        incrementNodeCount();
+        updateDepth(depth);
+        String state = FenUtilities.createFENFromGame(board);
+
+        if(transposition.containsKey(state)) {
+            if(transposition.get(state).depth >= depth) {
+                int value = transposition.get(state).score;
+                if(transposition.get(state).flag == 0) {
+                    return value;
+                } else if(transposition.get(state).flag == -1) {
+                    lowest = Math.max(lowest, value);
+                } else if(transposition.get(state).flag == 1) {
+                    highest = Math.min(highest, value);
+                }
+                if(lowest >= highest) {
+                    return value;
+                }
+            }
+        }
         if (depth == 0 || BoardUtils.isEndGame(board)) {
             this.boardsEvaluated++;
             return this.evaluator.evaluate(board, depth);
         }
         int currentHighest = highest;
+        Move bestMove = null;
         for (final Move move : this.moveSorter.sort((board.currentPlayer().getLegalMoves()))) {
             final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
             if (moveTransition.getMoveStatus().isDone()) {
                 currentHighest = Math.max(currentHighest, min(moveTransition.getToBoard(),
                         calculateQuiescenceDepth(board, move, depth), currentHighest, lowest));
+                bestMove = move;
                 if (lowest <= currentHighest) {
                     this.cutOffsProduced++;
                     break;
                 }
             }
         }
+        int flag = 0;
+        if(currentHighest <= olda) {
+            flag = 1;
+        } else if(currentHighest >= highest) {
+            flag = -1;
+        } else if(flag > lowest && flag < highest) {
+            flag = 0;
+        }
+        transposition.put(state, new tableNode(bestMove, currentHighest, depth, flag));
         return currentHighest;
     }
 
     public int min(final Board board,
                    final int depth,
-                   final int highest,
-                   final int lowest) {
+                   int highest,
+                   int lowest) {
         if (depth == 0 || BoardUtils.isEndGame(board)) {
             this.boardsEvaluated++;
             return this.evaluator.evaluate(board, depth);
@@ -176,5 +220,22 @@ public class AlphaBetaWithMoveOrdering extends Observable implements MoveStrateg
         return timeTaken + " ms";
     }
 
+    protected void resetStats() {
+        nodesExplored = 0;
+        depthExplored = 0;
+    }
+
+    protected void printStats() {
+        System.out.println("Nodes explored during last search:  " + nodesExplored);
+        System.out.println("Depth explored during last search " + depthExplored);
+    }
+
+    protected void updateDepth(int depth) {
+        depthExplored = Math.max(depth, depthExplored);
+    }
+
+    protected void incrementNodeCount() {
+        nodesExplored++;
+    }
 
 }
