@@ -3,8 +3,6 @@ package com.cannon.pgn;
 import com.cannon.engine.board.Board;
 import com.cannon.engine.board.BoardUtils;
 
-import java.util.Locale;
-
 public class FenUtilities {
 
     private FenUtilities() {

@@ -8,6 +8,7 @@ import com.cannon.engine.board.Move;
 import com.cannon.engine.player.MoveTransition;
 import com.cannon.engine.player.Player;
 import com.cannon.pgn.FenUtilities;
+import com.cannon.pgn.ZobristHashing;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 
@@ -29,7 +30,8 @@ public class AlphaBetaWithMoveOrdering extends Observable implements MoveStrateg
     private int lowestSeenValue = Integer.MAX_VALUE;
     private int nodesExplored = 0;
     private int depthExplored = 0;
-    private Map<String,tableNode> transposition = new HashMap<>();
+    private Map<Long,tableNode> transposition = new HashMap<>();
+    public ZobristHashing zobrist;
 
     private class tableNode{
         protected int score;
@@ -74,6 +76,7 @@ public class AlphaBetaWithMoveOrdering extends Observable implements MoveStrateg
         this.boardsEvaluated = 0;
         this.quiescenceCount = 0;
         this.cutOffsProduced = 0;
+        this.zobrist = new ZobristHashing();
     }
 
     @Override
@@ -139,7 +142,7 @@ public class AlphaBetaWithMoveOrdering extends Observable implements MoveStrateg
         int olda = lowest;
         incrementNodeCount();
         updateDepth(depth);
-        String state = FenUtilities.createFENFromGame(board);
+        long state = zobrist.getHash(board);
 
         if(transposition.containsKey(state)) {
             if(transposition.get(state).depth >= depth) {
@@ -193,7 +196,7 @@ public class AlphaBetaWithMoveOrdering extends Observable implements MoveStrateg
         int olda = lowest;
         incrementNodeCount();
         updateDepth(depth);
-        String state = FenUtilities.createFENFromGame(board);
+        long state = zobrist.getHash(board);
 
         if(transposition.containsKey(state)) {
             if(transposition.get(state).depth >= depth) {
