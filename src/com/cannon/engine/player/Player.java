@@ -6,6 +6,7 @@ import com.cannon.engine.board.Move;
 import com.cannon.engine.pieces.Piece;
 import com.cannon.engine.pieces.Soldier;
 import com.cannon.engine.pieces.Town;
+import com.cannon.engine.player.AI.MoveStrategy;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public abstract class Player {
     protected final Town playerTown;
     protected final Soldier playerSoldier;
     protected final Collection<Move> legalMoves;
+    private MoveStrategy strategy;
     private final boolean isInCheck;
 
     Player(final Board board,
@@ -36,6 +38,14 @@ public abstract class Player {
 
     public Collection<Move> getLegalMoves() {
         return this.legalMoves;
+    }
+
+    public void setMoveStrategy(final MoveStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public MoveStrategy getMoveStrategy() {
+        return this.strategy;
     }
 
 

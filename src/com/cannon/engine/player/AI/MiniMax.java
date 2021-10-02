@@ -21,7 +21,7 @@ public class MiniMax implements MoveStrategy{
     }
 
     @Override
-    public Move execute(Board board) {
+    public Move execute(final Board board) {
         final long startTime = System.currentTimeMillis();
 
         Move bestMove = null;

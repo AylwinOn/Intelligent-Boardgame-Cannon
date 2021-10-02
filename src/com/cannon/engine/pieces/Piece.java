@@ -12,6 +12,8 @@ public abstract class Piece {
     protected final Alliance pieceAlliance;
     protected boolean isFirstMove;
     private final int cachedHashCode;
+    public static boolean townPlacedDark = false;
+    public static boolean townPlacedLight = false;
 
     Piece(final PieceType pieceType, final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove) {
         this.pieceType = pieceType;

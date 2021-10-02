@@ -34,10 +34,9 @@ public abstract class Move {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + this.movedPiece.getPiecePosition();
         result = prime * result + this.destinationCoordinate;
         result = prime * result + this.movedPiece.hashCode();
-        result = prime * result + this.movedPiece.getPiecePosition();
-        result = result + (isFirstMove ? 1 : 0);
         return result;
     }
 
@@ -294,7 +293,7 @@ public abstract class Move {
 
     public static final class NullMove extends Move {
         private NullMove() {
-            super(null,101);
+            super(null, -1);
         }
 
         @Override

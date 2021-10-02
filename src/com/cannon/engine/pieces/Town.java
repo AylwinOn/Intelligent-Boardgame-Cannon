@@ -34,27 +34,7 @@ public class Town extends Piece {
                 continue;
             }
             if(this.isFirstMove()) {
-                if(currentCandidateOffset == 0) {
-                    legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
-                } else if(currentCandidateOffset == 1) {
-                    legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
-                } else if(currentCandidateOffset == 2) {
-                    legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
-                } else if(currentCandidateOffset == 3) {
-                    legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
-                } else if(currentCandidateOffset == 4) {
-                    legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
-                } else if(currentCandidateOffset == 5) {
-                    legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
-                } else if(currentCandidateOffset == 6) {
-                    legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
-                } else if(currentCandidateOffset == 7) {
-                    legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
-                } else if(currentCandidateOffset == 8) {
-                    legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
-                } else if(currentCandidateOffset == 9) {
-                    legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
-                }
+                legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
             }
         }
         return ImmutableList.copyOf(legalMoves);
@@ -62,6 +42,11 @@ public class Town extends Piece {
 
     @Override
     public Town movePiece(Move move) {
+        if(move.getMovedPiece().getPieceAlliance().isDark()) {
+            townPlacedDark = true;
+        } else if(move.getMovedPiece().getPieceAlliance().isLight()) {
+            townPlacedLight = true;
+        }
         return new Town(move.getDestinationCoordinate(), move.getMovedPiece().getPieceAlliance(), false);
     }
 

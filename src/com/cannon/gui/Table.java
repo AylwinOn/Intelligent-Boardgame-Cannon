@@ -6,8 +6,6 @@ import com.cannon.engine.board.Move;
 import com.cannon.engine.board.Tile;
 import com.cannon.engine.pieces.Piece;
 import com.cannon.engine.player.AI.AlphaBetaWithMoveOrdering;
-import com.cannon.engine.player.AI.MiniMax;
-import com.cannon.engine.player.AI.MoveStrategy;
 import com.cannon.engine.player.MoveTransition;
 import com.google.common.collect.Lists;
 
@@ -16,7 +14,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -428,8 +425,12 @@ public class Table extends Observable {
 
         @Override
         protected Move doInBackground() throws Exception {
-            final MoveStrategy alphaBeta = new AlphaBetaWithMoveOrdering(Table.get().getGameSetup().getSearchDepth(), 5);
-            final Move bestMove = alphaBeta.execute(Table.get().getGameBoard());
+            final Move bestMove;
+            final int moveNumber = Table.get().getMoveLog().size();
+            final int quiescenceFactor = 2000 + (100 * moveNumber);
+            final AlphaBetaWithMoveOrdering strategy = new AlphaBetaWithMoveOrdering(Table.get().getGameSetup().getSearchDepth(), quiescenceFactor);
+            Table.get().getGameBoard().currentPlayer().setMoveStrategy(strategy);
+            bestMove = Table.get().getGameBoard().currentPlayer().getMoveStrategy().execute(Table.get().getGameBoard());
             return bestMove;
         }
 
