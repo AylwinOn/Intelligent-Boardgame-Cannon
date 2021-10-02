@@ -190,22 +190,53 @@ public class AlphaBetaWithMoveOrdering extends Observable implements MoveStrateg
                    final int depth,
                    int highest,
                    int lowest) {
+        int olda = lowest;
+        incrementNodeCount();
+        updateDepth(depth);
+        String state = FenUtilities.createFENFromGame(board);
+
+        if(transposition.containsKey(state)) {
+            if(transposition.get(state).depth >= depth) {
+                int value = transposition.get(state).score;
+                if(transposition.get(state).flag == 0) {
+                    return value;
+                } else if(transposition.get(state).flag == -1) {
+                    lowest = Math.max(lowest, value);
+                } else if(transposition.get(state).flag == 1) {
+                    highest = Math.min(highest, value);
+                }
+                if(lowest >= highest) {
+                    return value;
+                }
+            }
+        }
         if (depth == 0 || BoardUtils.isEndGame(board)) {
             this.boardsEvaluated++;
             return this.evaluator.evaluate(board, depth);
         }
         int currentLowest = lowest;
+        Move bestMove = null;
         for (final Move move : this.moveSorter.sort((board.currentPlayer().getLegalMoves()))) {
             final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
             if (moveTransition.getMoveStatus().isDone()) {
                 currentLowest = Math.min(currentLowest, max(moveTransition.getToBoard(),
                         calculateQuiescenceDepth(board, move, depth), highest, currentLowest));
+                bestMove = move;
                 if (currentLowest <= highest) {
                     this.cutOffsProduced++;
                     break;
                 }
             }
         }
+        int flag = 0;
+        if(currentLowest <= olda) {
+            flag = 1;
+        } else if(currentLowest >= highest) {
+            flag = -1;
+        } else if(flag > lowest && flag < highest) {
+            flag = 0;
+        }
+        transposition.put(state, new tableNode(bestMove, currentLowest, depth, flag));
         return currentLowest;
     }
 
@@ -218,16 +249,6 @@ public class AlphaBetaWithMoveOrdering extends Observable implements MoveStrateg
     private static String calculateTimeTaken(final long start, final long end) {
         final long timeTaken = (end - start) / 1000000;
         return timeTaken + " ms";
-    }
-
-    protected void resetStats() {
-        nodesExplored = 0;
-        depthExplored = 0;
-    }
-
-    protected void printStats() {
-        System.out.println("Nodes explored during last search:  " + nodesExplored);
-        System.out.println("Depth explored during last search " + depthExplored);
     }
 
     protected void updateDepth(int depth) {

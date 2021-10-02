@@ -55,7 +55,7 @@ public abstract class Player {
                 return (Town) piece;
             }
         }
-        throw new RuntimeException("Not a valid board");
+        throw new RuntimeException("Should not reach here! " +this.getAlliance()+ " king could not be established!");
     }
 
     protected Soldier establishSoldier() {
