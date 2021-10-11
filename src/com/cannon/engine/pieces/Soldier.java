@@ -15,7 +15,7 @@ import static com.cannon.engine.board.Move.*;
 public class Soldier extends Piece {
 
     private final static int[] CANDIDATE_MOVE_COORDINATES = {10, 9, 11, 1, -1, -20, -18, -22};
-    private final static int[] SURROUNDING_MOVE_COORDINATES = {10, 9, 11, 1, -1};
+    private final static int[] SURROUNDING_MOVE_COORDINATES = {10, 9, 11, 1, -10, -9, -11, -1};
     private final static int[] NEIGHBOUR_COORDINATES = {10, 9, 11, 1};
 
     public Soldier(final Alliance pieceAlliance, final int piecePosition) {

@@ -7,6 +7,7 @@ import com.cannon.engine.board.BoardUtils;
 import com.cannon.engine.board.Move;
 import com.cannon.engine.player.MoveTransition;
 import com.cannon.engine.player.Player;
+import com.cannon.gui.Table;
 import com.cannon.pgn.FenUtilities;
 import com.cannon.pgn.ZobristHashing;
 import com.google.common.collect.ComparisonChain;
@@ -248,6 +249,15 @@ public class AlphaBetaWithMoveOrdering extends Observable implements MoveStrateg
                                          final int depth) {
         return depth - 1;
     }
+
+//    private int quienscenceSearch(final Board board, int depth, int lowest, int highest) {
+//        int score = this.evaluator.evaluate(board, depth);
+//        if(score >= highest) {
+//            return score;
+//        } else if(score > lowest) {
+//            lowest = score;
+//        }
+//    }
 
     private static String calculateTimeTaken(final long start, final long end) {
         final long timeTaken = (end - start) / 1000000;

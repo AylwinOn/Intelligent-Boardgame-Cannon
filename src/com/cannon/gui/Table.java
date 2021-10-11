@@ -459,7 +459,7 @@ public class Table extends Observable {
         return this.cannonBoard;
     }
 
-    private MoveLog getMoveLog() {
+    public MoveLog getMoveLog() {
         return this.moveLog;
     }
 
