@@ -32,11 +32,11 @@ public abstract class Move {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
         int result = 1;
-        result = prime * result + this.movedPiece.getPiecePosition();
-        result = prime * result + this.destinationCoordinate;
-        result = prime * result + this.movedPiece.hashCode();
+        result = 31 * result + this.destinationCoordinate;
+        result = 31 * result + this.movedPiece.hashCode();
+        result = 31 * result + this.movedPiece.getPiecePosition();
+        result = result + (isFirstMove ? 1 : 0);
         return result;
     }
 
@@ -80,16 +80,11 @@ public abstract class Move {
 
     public Board execute() {
         final Builder builder = new Builder();
-        for(final Piece piece : this.board.currentPlayer().getActivePieces()) {
-            if(!this.movedPiece.equals(piece)) {
-                builder.setPiece(piece);
-            }
-        }
-        for(final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
-            builder.setPiece(piece);
-        }
+        this.board.currentPlayer().getActivePieces().stream().filter(piece -> !this.movedPiece.equals(piece)).forEach(builder::setPiece);
+        this.board.currentPlayer().getOpponent().getActivePieces().forEach(builder::setPiece);
         builder.setPiece(this.movedPiece.movePiece(this));
         builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
+        builder.setMoveTransition(this);
         return builder.build();
     }
 
@@ -291,19 +286,31 @@ public abstract class Move {
     }
 
 
-    public static final class NullMove extends Move {
+    private static class NullMove
+            extends Move {
+
         private NullMove() {
             super(null, -1);
         }
 
         @Override
-        public Board execute() {
-            throw new RuntimeException("Cannot execute the null move");
+        public int getCurrentCoordinate() {
+            return -1;
         }
 
         @Override
-        public int getCurrentCoordinate() {
+        public int getDestinationCoordinate() {
             return -1;
+        }
+
+        @Override
+        public Board execute() {
+            throw new RuntimeException("cannot execute null move!");
+        }
+
+        @Override
+        public String toString() {
+            return "Null Move";
         }
     }
 

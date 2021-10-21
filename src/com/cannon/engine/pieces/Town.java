@@ -4,11 +4,14 @@ import com.cannon.engine.Alliance;
 import com.cannon.engine.board.Board;
 import com.cannon.engine.board.BoardUtils;
 import com.cannon.engine.board.Move;
+import com.cannon.gui.GameSetup;
+import com.cannon.gui.Table;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import static com.cannon.engine.board.Move.*;
 
@@ -27,14 +30,31 @@ public class Town extends Piece {
     @Override
     public Collection<Move> calculateLegalMoves(Board board) {
         final List<Move> legalMoves = new ArrayList<>();
-
-        for(final int currentCandidateOffset : CANDIDATE_MOVE_COORDINATES) {
-            int candidateDestinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() * currentCandidateOffset);
-            if(!BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
-                continue;
-            }
-            if(this.isFirstMove()) {
-                legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
+        if(this.isFirstMove()) {
+            if(this.pieceAlliance.isDark()) {
+                if(GameSetup.AIplayerDark) {
+                    Random r = new Random();
+                    int randomNumber = r.nextInt(10);
+                    int candidateDestinationCoordinateAI = this.piecePosition + (this.pieceAlliance.getDirection() * randomNumber);
+                    legalMoves.add(new TownMove(board, this, candidateDestinationCoordinateAI));
+                } else {
+                    for(final int currentCandidateOffset : CANDIDATE_MOVE_COORDINATES) {
+                        int candidateDestinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() * currentCandidateOffset);
+                        legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
+                    }
+                }
+            } else if(this.pieceAlliance.isLight()) {
+                if(GameSetup.AIplayerLight) {
+                    Random r = new Random();
+                    int randomNumber = r.nextInt(10);
+                    int candidateDestinationCoordinateAI = this.piecePosition + (this.pieceAlliance.getDirection() * randomNumber);
+                    legalMoves.add(new TownMove(board, this, candidateDestinationCoordinateAI));
+                } else {
+                    for(final int currentCandidateOffset : CANDIDATE_MOVE_COORDINATES) {
+                        int candidateDestinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() * currentCandidateOffset);
+                        legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
+                    }
+                }
             }
         }
         return ImmutableList.copyOf(legalMoves);

@@ -28,4 +28,9 @@ public class LightPlayer extends Player {
     public Player getOpponent() {
         return this.board.darkPlayer();
     }
+
+    @Override
+    public String toString() {
+        return Alliance.LIGHT.toString();
+    }
 }

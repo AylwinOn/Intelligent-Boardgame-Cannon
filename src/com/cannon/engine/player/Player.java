@@ -20,7 +20,8 @@ public abstract class Player {
     protected final Soldier playerSoldier;
     protected final Collection<Move> legalMoves;
     private MoveStrategy strategy;
-    private final boolean isInCheck;
+    protected final boolean isInCheck;
+    protected final boolean isCannonInCheck;
 
     Player(final Board board,
            final Collection<Move> legalMoves,
@@ -30,10 +31,11 @@ public abstract class Player {
         this.playerSoldier = establishSoldier();
         this.legalMoves = legalMoves;
         this.isInCheck = !Player.calculateAttackOnTile(this.playerTown.getPiecePosition(), opponentMoves).isEmpty();
+        this.isCannonInCheck = !Player.calculateCannonAttackOnTile(this.playerTown, opponentMoves).isEmpty();
     }
 
-    public Town getPlayerTown() {
-        return this.playerTown;
+    public boolean isInCheck() {
+        return this.isInCheck || isCannonInCheck;
     }
 
     public Collection<Move> getLegalMoves() {
@@ -48,6 +50,15 @@ public abstract class Player {
         return this.strategy;
     }
 
+    private static Collection<Piece> calculateCannonAttackOnTile(Piece town, Collection<Move> moves) {
+        final List<Piece> attackPieces = new ArrayList<>();
+        for(final Move move : moves) {
+            if(town == move.getAttackedPiece()) {
+                attackPieces.add(move.getAttackedPiece());
+            }
+        }
+        return ImmutableList.copyOf(attackPieces);
+    }
 
     private static Collection<Move> calculateAttackOnTile(int piecePosition, Collection<Move> moves) {
         final List<Move> attackMoves = new ArrayList<>();
@@ -65,7 +76,7 @@ public abstract class Player {
                 return (Town) piece;
             }
         }
-        throw new RuntimeException("Should not reach here! " +this.getAlliance()+ " king could not be established!");
+        throw new RuntimeException("CHECHMATE! " +this.getAlliance()+ " king could not be established!");
     }
 
     protected Soldier establishSoldier() {
@@ -74,10 +85,6 @@ public abstract class Player {
 
     public boolean isMoveLegal(final Move move) {
         return this.legalMoves.contains(move);
-    }
-
-    public boolean isInCheck() {
-        return this.isInCheck;
     }
 
 

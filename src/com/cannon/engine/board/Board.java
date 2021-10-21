@@ -1,6 +1,7 @@
 package com.cannon.engine.board;
 
 import com.cannon.engine.Alliance;
+import com.cannon.engine.board.Move.MoveFactory;
 import com.cannon.engine.pieces.Piece;
 import com.cannon.engine.pieces.Soldier;
 import com.cannon.engine.pieces.Town;
@@ -23,6 +24,7 @@ public class Board {
     private final DarkPlayer darkPlayer;
     private final Player currentPlayer;
     private final Soldier cannonSoldier;
+    private final Move transitionMove;
 
     public Board(final Builder builder) {
         this.gameBoard = createGameBoard(builder);
@@ -34,6 +36,7 @@ public class Board {
         this.darkPlayer = new DarkPlayer(this, lightStandardLegalMoves, darkStandardLegalMoves);
         this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.lightPlayer, this.darkPlayer);
         this.cannonSoldier = builder.cannonSoldier;
+        this.transitionMove = builder.transitionMove != null ? builder.transitionMove : MoveFactory.getNullMove();
     }
 
     @Override
@@ -103,6 +106,10 @@ public class Board {
         return gameBoard.get(tileCoordinate);
     }
 
+    public Move getTransitionMove() {
+        return this.transitionMove;
+    }
+
     private static List<Tile> createGameBoard(final Builder builder) {
         final Tile[] tiles = new Tile[BoardUtils.NUM_TILES];
         for(int i = 0; i < BoardUtils.NUM_TILES; i++) {
@@ -159,10 +166,10 @@ public class Board {
 
 
     public static class Builder {
-
         Map<Integer, Piece> boardConfig;
         Alliance nextMoveMaker;
         Soldier cannonSoldier;
+        Move transitionMove;
 
         public Builder(){
             this.boardConfig = new HashMap<>();
@@ -180,6 +187,11 @@ public class Board {
 
         public Builder setCannonAttackMove(final Soldier cannonSoldier) {
             this.cannonSoldier = cannonSoldier;
+            return this;
+        }
+
+        public Builder setMoveTransition(final Move transitionMove) {
+            this.transitionMove = transitionMove;
             return this;
         }
 

@@ -6,6 +6,7 @@ import com.cannon.engine.board.Move;
 import com.cannon.engine.board.Tile;
 import com.cannon.engine.pieces.Piece;
 import com.cannon.engine.player.AI.AlphaBetaWithMoveOrdering;
+import com.cannon.engine.player.AI.IterativeDeepening;
 import com.cannon.engine.player.MoveTransition;
 import com.google.common.collect.Lists;
 
@@ -91,14 +92,6 @@ public class Table extends Observable {
 
     private JMenu createFileMenu() {
         final JMenu fileMenu = new JMenu("File");
-        final JMenuItem openPGN = new JMenuItem("Load PGN File");
-        openPGN.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("open up that pgn file");
-            }
-        });
-        fileMenu.add(openPGN);
         final JMenuItem exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.addActionListener(new ActionListener() {
             @Override
@@ -259,7 +252,7 @@ public class Table extends Observable {
         }
     }
 
-    enum PlayerType {
+    public enum PlayerType {
         HUMAN,
         COMPUTER
     }
@@ -385,7 +378,7 @@ public class Table extends Observable {
         return INSTANCE;
     }
 
-    private GameSetup getGameSetup() {
+    public GameSetup getGameSetup() {
         return this.gameSetup;
     }
 
@@ -455,7 +448,7 @@ public class Table extends Observable {
         return this.gameframe;
     }
 
-    private Board getGameBoard() {
+    public Board getGameBoard() {
         return this.cannonBoard;
     }
 

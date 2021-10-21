@@ -1,5 +1,6 @@
 package com.cannon.engine.board;
 
+import com.cannon.engine.player.MoveTransition;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.HashMap;
@@ -86,6 +87,6 @@ public class BoardUtils {
     }
 
     public static boolean isEndGame(final Board board) {
-        return board.lightPlayer().isInCheck() || board.darkPlayer().isInCheck();
+        return board.currentPlayer().isInCheck();
     }
 }

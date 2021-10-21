@@ -4,6 +4,7 @@ import com.cannon.engine.Alliance;
 import com.cannon.engine.board.Board;
 import com.cannon.engine.board.BoardUtils;
 import com.cannon.engine.board.Move;
+import com.cannon.engine.player.Player;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class Soldier extends Piece {
                 int candidateNeighbourCoordinateDOWN2 = candidateNeighbourCoordinateDOWN - (this.pieceAlliance.getDirection() * currentCandidateNeighbour);
                 int candidateNeighbourCoordinateDOWN3 = candidateNeighbourCoordinateDOWN2 - (this.pieceAlliance.getDirection() * currentCandidateNeighbour);
 
-                if(candidateNeighbourCoordinateUP > 0 && candidateNeighbourCoordinateUP < 100 && candidateNeighbourCoordinateDOWN > 0 && candidateNeighbourCoordinateDOWN < 100
+                if(candidateNeighbourCoordinateUP >= 0 && candidateNeighbourCoordinateUP < 100 && candidateNeighbourCoordinateDOWN >= 0 && candidateNeighbourCoordinateDOWN < 100
                         && board.getTile(candidateNeighbourCoordinateUP).isTileOccupied() && board.getTile(candidateNeighbourCoordinateDOWN).isTileOccupied()) {
                     final Piece pieceOnCandidateUP = board.getTile(candidateNeighbourCoordinateUP).getPiece();
                     final Piece pieceOnCandidateDOWN = board.getTile(candidateNeighbourCoordinateDOWN).getPiece();
@@ -48,10 +49,10 @@ public class Soldier extends Piece {
 
                         int intermediateCannonAttackUP = 2 * currentCandidateNeighbour;
                         int intermediateCannonAttackCoordinateUP = this.piecePosition + (this.pieceAlliance.getDirection() * intermediateCannonAttackUP);
-                        if(intermediateCannonAttackCoordinateUP > 0 && intermediateCannonAttackCoordinateUP < 100 && !board.getTile(intermediateCannonAttackCoordinateUP).isTileOccupied()) {
+                        if(intermediateCannonAttackCoordinateUP >= 0 && intermediateCannonAttackCoordinateUP < 100 && !board.getTile(intermediateCannonAttackCoordinateUP).isTileOccupied()) {
                             int candidateCannonAttackUP = 3 * currentCandidateNeighbour;
                             int candidateCannonAttackCoordinateUP = this.piecePosition + (this.pieceAlliance.getDirection() * candidateCannonAttackUP);
-                            if(candidateCannonAttackCoordinateUP > 0 && candidateCannonAttackCoordinateUP < 100 && board.getTile(candidateCannonAttackCoordinateUP).isTileOccupied()) {
+                            if(candidateCannonAttackCoordinateUP >= 0 && candidateCannonAttackCoordinateUP < 100 && board.getTile(candidateCannonAttackCoordinateUP).isTileOccupied()) {
                                 final Piece pieceOnCandidateCannonUP = board.getTile(candidateCannonAttackCoordinateUP).getPiece();
                                 if(this.pieceAlliance != pieceOnCandidateCannonUP.getPieceAlliance()) {
                                     if(!((BoardUtils.NINTH_COLUMN[this.piecePosition] && BoardUtils.SECOND_COLUMN[candidateCannonAttackCoordinateUP]) ||
@@ -61,10 +62,10 @@ public class Soldier extends Piece {
                                         legalMoves.add(new CannonAttackMove(board, this, this.piecePosition, pieceOnCandidateCannonUP));
                                     }
                                 }
-                            } else if(candidateCannonAttackCoordinateUP > 0 && candidateCannonAttackCoordinateUP < 100 && !board.getTile(candidateCannonAttackCoordinateUP).isTileOccupied()) {
+                            } else if(candidateCannonAttackCoordinateUP >= 0 && candidateCannonAttackCoordinateUP < 100 && !board.getTile(candidateCannonAttackCoordinateUP).isTileOccupied()) {
                                 int candidateCannonAttackUP2 = 4 * currentCandidateNeighbour;
                                 int candidateCannonAttackCoordinateUP2 = this.piecePosition + (this.pieceAlliance.getDirection() * candidateCannonAttackUP2);
-                                if(candidateCannonAttackCoordinateUP2 > 0 && candidateCannonAttackCoordinateUP2 < 100 && board.getTile(candidateCannonAttackCoordinateUP2).isTileOccupied()) {
+                                if(candidateCannonAttackCoordinateUP2 >= 0 && candidateCannonAttackCoordinateUP2 < 100 && board.getTile(candidateCannonAttackCoordinateUP2).isTileOccupied()) {
                                     final Piece pieceOnCandidateCannonUP2 = board.getTile(candidateCannonAttackCoordinateUP2).getPiece();
                                     if(this.pieceAlliance != pieceOnCandidateCannonUP2.getPieceAlliance()) {
                                         if(!((BoardUtils.NINTH_COLUMN[this.piecePosition] && BoardUtils.THIRD_COLUMN[candidateCannonAttackCoordinateUP2]) ||
@@ -81,10 +82,10 @@ public class Soldier extends Piece {
                         }
                         int intermediateCannonAttackDOWN = -2 * currentCandidateNeighbour;
                         int intermediateCannonAttackCoordinateDOWN = this.piecePosition + (this.pieceAlliance.getDirection() * intermediateCannonAttackDOWN);
-                        if(intermediateCannonAttackCoordinateDOWN > 0 && intermediateCannonAttackCoordinateDOWN < 100 && !board.getTile(intermediateCannonAttackCoordinateDOWN).isTileOccupied()) {
+                        if(intermediateCannonAttackCoordinateDOWN >= 0 && intermediateCannonAttackCoordinateDOWN < 100 && !board.getTile(intermediateCannonAttackCoordinateDOWN).isTileOccupied()) {
                             int candidateCannonAttackDOWN = -3 * currentCandidateNeighbour;
                             int candidateCannonAttackCoordinateDOWN = this.piecePosition + (this.pieceAlliance.getDirection() * candidateCannonAttackDOWN);
-                            if(candidateCannonAttackCoordinateDOWN > 0 && candidateCannonAttackCoordinateDOWN < 100 && board.getTile(candidateCannonAttackCoordinateDOWN).isTileOccupied()) {
+                            if(candidateCannonAttackCoordinateDOWN >= 0 && candidateCannonAttackCoordinateDOWN < 100 && board.getTile(candidateCannonAttackCoordinateDOWN).isTileOccupied()) {
                                 final Piece pieceOnCandidateCannonDOWN = board.getTile(candidateCannonAttackCoordinateDOWN).getPiece();
                                 if(this.pieceAlliance != pieceOnCandidateCannonDOWN.getPieceAlliance()) {
                                     if(!((BoardUtils.NINTH_COLUMN[this.piecePosition] && BoardUtils.SECOND_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
@@ -94,10 +95,10 @@ public class Soldier extends Piece {
                                         legalMoves.add(new CannonAttackMove(board, this, this.piecePosition, pieceOnCandidateCannonDOWN));
                                     }
                                 }
-                            } else if(candidateCannonAttackCoordinateDOWN > 0 && candidateCannonAttackCoordinateDOWN < 100 && !board.getTile(candidateCannonAttackCoordinateDOWN).isTileOccupied()) {
+                            } else if(candidateCannonAttackCoordinateDOWN >= 0 && candidateCannonAttackCoordinateDOWN < 100 && !board.getTile(candidateCannonAttackCoordinateDOWN).isTileOccupied()) {
                                 int candidateCannonAttackDOWN2 = -4 * currentCandidateNeighbour;
                                 int candidateCannonAttackCoordinateDOWN2 = this.piecePosition + (this.pieceAlliance.getDirection() * candidateCannonAttackDOWN2);
-                                if(candidateCannonAttackCoordinateDOWN2 > 0 && candidateCannonAttackCoordinateDOWN2 < 100 && board.getTile(candidateCannonAttackCoordinateDOWN2).isTileOccupied()) {
+                                if(candidateCannonAttackCoordinateDOWN2 >= 0 && candidateCannonAttackCoordinateDOWN2 < 100 && board.getTile(candidateCannonAttackCoordinateDOWN2).isTileOccupied()) {
                                     final Piece pieceOnCandidateCannonDOWN2 = board.getTile(candidateCannonAttackCoordinateDOWN2).getPiece();
                                     if(this.pieceAlliance != pieceOnCandidateCannonDOWN2.getPieceAlliance()) {
                                         if(!((BoardUtils.NINTH_COLUMN[this.piecePosition] && BoardUtils.THIRD_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
@@ -114,24 +115,24 @@ public class Soldier extends Piece {
                         }
                     }
                 }
-                if(candidateNeighbourCoordinateUP > 0 && candidateNeighbourCoordinateUP < 100 && candidateNeighbourCoordinateUP2 > 0 && candidateNeighbourCoordinateUP2 < 100
+                if(candidateNeighbourCoordinateUP >= 0 && candidateNeighbourCoordinateUP < 100 && candidateNeighbourCoordinateUP2 >= 0 && candidateNeighbourCoordinateUP2 < 100
                         && board.getTile(candidateNeighbourCoordinateUP).isTileOccupied() && board.getTile(candidateNeighbourCoordinateUP2).isTileOccupied()) {
                     final Piece pieceOnCandidateUP = board.getTile(candidateNeighbourCoordinateUP).getPiece();
                     final Piece pieceOnCandidateUP2 = board.getTile(candidateNeighbourCoordinateUP2).getPiece();
                     if(this.pieceAlliance == pieceOnCandidateUP.getPieceAlliance() && this.pieceAlliance == pieceOnCandidateUP2.getPieceAlliance()
                             && this.pieceType == pieceOnCandidateUP.getPieceType() && this.pieceType == pieceOnCandidateUP2.getPieceType()) {
-                        if(candidateNeighbourCoordinateUP3 > 0 && candidateNeighbourCoordinateUP3 < 100 && !board.getTile(candidateNeighbourCoordinateUP3).isTileOccupied()) {
+                        if(candidateNeighbourCoordinateUP3 >= 0 && candidateNeighbourCoordinateUP3 < 100 && !board.getTile(candidateNeighbourCoordinateUP3).isTileOccupied()) {
                             legalMoves.add(new CannonSlideMove(board, this, candidateNeighbourCoordinateUP3));
                         }
                     }
                 }
-                if(candidateNeighbourCoordinateDOWN > 0 && candidateNeighbourCoordinateDOWN < 100 && candidateNeighbourCoordinateDOWN2 > 0 && candidateNeighbourCoordinateDOWN2 < 100
+                if(candidateNeighbourCoordinateDOWN >= 0 && candidateNeighbourCoordinateDOWN < 100 && candidateNeighbourCoordinateDOWN2 >= 0 && candidateNeighbourCoordinateDOWN2 < 100
                         && board.getTile(candidateNeighbourCoordinateDOWN).isTileOccupied() && board.getTile(candidateNeighbourCoordinateDOWN2).isTileOccupied()) {
                     final Piece pieceOnCandidateDOWN = board.getTile(candidateNeighbourCoordinateDOWN).getPiece();
                     final Piece pieceOnCandidateDOWN2 = board.getTile(candidateNeighbourCoordinateDOWN2).getPiece();
                     if(this.pieceAlliance == pieceOnCandidateDOWN.getPieceAlliance() && this.pieceAlliance == pieceOnCandidateDOWN2.getPieceAlliance()
                             && this.pieceType == pieceOnCandidateDOWN.getPieceType() && this.pieceType == pieceOnCandidateDOWN2.getPieceType()) {
-                        if(candidateNeighbourCoordinateDOWN3 > 0 && candidateNeighbourCoordinateDOWN3 < 100 && !board.getTile(candidateNeighbourCoordinateDOWN3).isTileOccupied()) {
+                        if(candidateNeighbourCoordinateDOWN3 >= 0 && candidateNeighbourCoordinateDOWN3 < 100 && !board.getTile(candidateNeighbourCoordinateDOWN3).isTileOccupied()) {
                             legalMoves.add(new CannonSlideMove(board, this, candidateNeighbourCoordinateDOWN3));
                         }
                     }
@@ -141,7 +142,7 @@ public class Soldier extends Piece {
 
             for(final int currentCandidateSurrounding : SURROUNDING_MOVE_COORDINATES) {
                 int candidateUnderAttackCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() * currentCandidateSurrounding);
-                if(candidateUnderAttackCoordinate > 0 && candidateUnderAttackCoordinate < 100 && board.getTile(candidateUnderAttackCoordinate).isTileOccupied()) {
+                if(candidateUnderAttackCoordinate >= 0 && candidateUnderAttackCoordinate < 100 && board.getTile(candidateUnderAttackCoordinate).isTileOccupied()) {
                     final Piece pieceOnCandidate = board.getTile(candidateUnderAttackCoordinate).getPiece();
                     if(this.pieceAlliance != pieceOnCandidate.getPieceAlliance() && this.pieceType == pieceOnCandidate.getPieceType()) {
                         if(!((BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[pieceOnCandidate.piecePosition]) ||

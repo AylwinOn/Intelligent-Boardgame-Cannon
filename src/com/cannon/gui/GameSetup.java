@@ -28,6 +28,9 @@ public class GameSetup extends JDialog {
     private static final String HUMAN_TEXT = "Human";
     private static final String COMPUTER_TEXT = "Computer";
 
+    public static boolean AIplayerDark = false;
+    public static boolean AIplayerLight = false;
+
     GameSetup(final JFrame frame, boolean modal) {
         super(frame, modal);
         final JPanel myPanel = new JPanel(new GridLayout(0, 1));
@@ -62,7 +65,13 @@ public class GameSetup extends JDialog {
         okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 lightPlayerType = lightComputerButton.isSelected() ? PlayerType.COMPUTER : PlayerType.HUMAN;
+                if(lightPlayerType == PlayerType.COMPUTER) {
+                    AIplayerLight = true;
+                }
                 darkPlayerType = darkComputerButton.isSelected() ? PlayerType.COMPUTER : PlayerType.HUMAN;
+                if(darkPlayerType == PlayerType.COMPUTER) {
+                    AIplayerDark = true;
+                }
                 GameSetup.this.setVisible(false);
             }
         });
@@ -87,14 +96,14 @@ public class GameSetup extends JDialog {
         repaint();
     }
 
-    boolean isAIPlayer(final Player player) {
+    public boolean isAIPlayer(final Player player) {
         if(player.getAlliance() == Alliance.LIGHT) {
             return getLightPlayerType() == PlayerType.COMPUTER;
         }
         return getDarkPlayerType() == PlayerType.COMPUTER;
     }
 
-    Table.PlayerType getLightPlayerType() {
+    PlayerType getLightPlayerType() {
         return this.lightPlayerType;
     }
 
