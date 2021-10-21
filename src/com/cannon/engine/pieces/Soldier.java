@@ -122,7 +122,10 @@ public class Soldier extends Piece {
                     if(this.pieceAlliance == pieceOnCandidateUP.getPieceAlliance() && this.pieceAlliance == pieceOnCandidateUP2.getPieceAlliance()
                             && this.pieceType == pieceOnCandidateUP.getPieceType() && this.pieceType == pieceOnCandidateUP2.getPieceType()) {
                         if(candidateNeighbourCoordinateUP3 >= 0 && candidateNeighbourCoordinateUP3 < 100 && !board.getTile(candidateNeighbourCoordinateUP3).isTileOccupied()) {
-                            legalMoves.add(new CannonSlideMove(board, this, candidateNeighbourCoordinateUP3));
+                            if(!((BoardUtils.EIGHT_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateNeighbourCoordinateUP3]) ||
+                                    (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateNeighbourCoordinateUP3]))) {
+                                legalMoves.add(new CannonSlideMove(board, this, candidateNeighbourCoordinateUP3));
+                            }
                         }
                     }
                 }
@@ -133,7 +136,10 @@ public class Soldier extends Piece {
                     if(this.pieceAlliance == pieceOnCandidateDOWN.getPieceAlliance() && this.pieceAlliance == pieceOnCandidateDOWN2.getPieceAlliance()
                             && this.pieceType == pieceOnCandidateDOWN.getPieceType() && this.pieceType == pieceOnCandidateDOWN2.getPieceType()) {
                         if(candidateNeighbourCoordinateDOWN3 >= 0 && candidateNeighbourCoordinateDOWN3 < 100 && !board.getTile(candidateNeighbourCoordinateDOWN3).isTileOccupied()) {
-                            legalMoves.add(new CannonSlideMove(board, this, candidateNeighbourCoordinateDOWN3));
+                            if(!((BoardUtils.EIGHT_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateNeighbourCoordinateDOWN3]) ||
+                                    (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateNeighbourCoordinateDOWN3]))) {
+                                legalMoves.add(new CannonSlideMove(board, this, candidateNeighbourCoordinateDOWN3));
+                            }
                         }
                     }
                 }
