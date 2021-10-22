@@ -64,7 +64,9 @@ public class Soldier extends Piece {
                                             (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateCannonAttackCoordinateUP]) ||
                                             (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.THIRD_COLUMN[candidateCannonAttackCoordinateUP]) ||
                                             (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateUP]) ||
-                                            (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SIXTH_COLUMN[candidateCannonAttackCoordinateUP]))){
+                                            (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SIXTH_COLUMN[candidateCannonAttackCoordinateUP]) ||
+                                            (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FOURTH_COLUMN[candidateCannonAttackCoordinateUP]) ||
+                                            (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FIFTH_COLUMN[candidateCannonAttackCoordinateUP]))){
                                         legalMoves.add(new CannonAttackMove(board, this, this.piecePosition, pieceOnCandidateCannonUP));
                                     }
                                 }
@@ -83,7 +85,9 @@ public class Soldier extends Piece {
                                                 (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
                                                 (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.THIRD_COLUMN[candidateCannonAttackCoordinateUP2]) ||
                                                 (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
-                                                (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SIXTH_COLUMN[candidateCannonAttackCoordinateUP2]))) {
+                                                (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SIXTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
+                                                (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FOURTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
+                                                (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FIFTH_COLUMN[candidateCannonAttackCoordinateUP2]))) {
                                             legalMoves.add(new CannonAttackMove(board, this, this.piecePosition, pieceOnCandidateCannonUP2));
                                         }
                                     }
@@ -107,7 +111,9 @@ public class Soldier extends Piece {
                                             (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
                                             (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.THIRD_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
                                             (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
-                                            (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SIXTH_COLUMN[candidateCannonAttackCoordinateDOWN]))) {
+                                            (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SIXTH_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
+                                            (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FOURTH_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
+                                            (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FIFTH_COLUMN[candidateCannonAttackCoordinateDOWN]))) {
                                         legalMoves.add(new CannonAttackMove(board, this, this.piecePosition, pieceOnCandidateCannonDOWN));
                                     }
                                 }
@@ -126,7 +132,9 @@ public class Soldier extends Piece {
                                                 (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
                                                 (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.THIRD_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
                                                 (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
-                                                (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SIXTH_COLUMN[candidateCannonAttackCoordinateDOWN2]))) {
+                                                (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SIXTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
+                                                (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FOURTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
+                                                (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FIFTH_COLUMN[candidateCannonAttackCoordinateDOWN2]))) {
                                             legalMoves.add(new CannonAttackMove(board, this, this.piecePosition, pieceOnCandidateCannonDOWN2));
                                         }
                                     }
