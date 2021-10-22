@@ -39,7 +39,9 @@ public class Town extends Piece {
                     legalMoves.add(new TownMove(board, this, candidateDestinationCoordinateAI));
                 } else {
                     for(final int currentCandidateOffset : CANDIDATE_MOVE_COORDINATES) {
-                        int candidateDestinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() * currentCandidateOffset);
+                        Random r = new Random();
+                        int randomNumber = r.nextInt(10);
+                        int candidateDestinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() * randomNumber);
                         legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
                     }
                 }
