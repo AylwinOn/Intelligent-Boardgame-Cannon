@@ -34,7 +34,7 @@ public class Town extends Piece {
             if(this.pieceAlliance.isDark()) {
                 if(GameSetup.AIplayerDark) {
                     Random r = new Random();
-                    int randomNumber = r.nextInt(10);
+                    int randomNumber = r.nextInt(9);
                     int candidateDestinationCoordinateAI = this.piecePosition + (this.pieceAlliance.getDirection() * randomNumber);
                     legalMoves.add(new TownMove(board, this, candidateDestinationCoordinateAI));
                 } else {
@@ -46,7 +46,7 @@ public class Town extends Piece {
             } else if(this.pieceAlliance.isLight()) {
                 if(GameSetup.AIplayerLight) {
                     Random r = new Random();
-                    int randomNumber = r.nextInt(10);
+                    int randomNumber = r.nextInt(9);
                     int candidateDestinationCoordinateAI = this.piecePosition + (this.pieceAlliance.getDirection() * randomNumber);
                     legalMoves.add(new TownMove(board, this, candidateDestinationCoordinateAI));
                 } else {

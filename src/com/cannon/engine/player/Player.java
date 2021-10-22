@@ -83,6 +83,12 @@ public abstract class Player {
         return null;
     }
 
+    private boolean hasEscapeMoves() {
+        return this.legalMoves.stream()
+                .anyMatch(move -> makeMove(move)
+                        .getMoveStatus().isDone());
+    }
+
     public boolean isMoveLegal(final Move move) {
         return this.legalMoves.contains(move);
     }
