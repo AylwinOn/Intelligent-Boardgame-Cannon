@@ -17,7 +17,7 @@ import static com.cannon.engine.board.Move.*;
 
 public class Town extends Piece {
 
-    private final static int[] CANDIDATE_MOVE_COORDINATES = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    private final static int[] CANDIDATE_MOVE_COORDINATES = {1, 2, 3, 4, 5, 6, 7, 8};
 
     public Town(final int piecePosition, final Alliance pieceAlliance) {
         super(PieceType.TOWN, piecePosition, pieceAlliance, true);
@@ -39,9 +39,7 @@ public class Town extends Piece {
                     legalMoves.add(new TownMove(board, this, candidateDestinationCoordinateAI));
                 } else {
                     for(final int currentCandidateOffset : CANDIDATE_MOVE_COORDINATES) {
-                        Random r = new Random();
-                        int randomNumber = r.nextInt(10);
-                        int candidateDestinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() * randomNumber);
+                        int candidateDestinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() * currentCandidateOffset);
                         legalMoves.add(new TownMove(board, this, candidateDestinationCoordinate));
                     }
                 }
