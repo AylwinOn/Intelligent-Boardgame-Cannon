@@ -137,7 +137,6 @@ public abstract class Move {
 
 
 
-
     public static final class TownMove extends Move {
         public TownMove(final Board board,
                         final Piece movedPiece,

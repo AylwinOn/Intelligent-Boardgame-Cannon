@@ -6,7 +6,6 @@ import com.cannon.engine.board.Move;
 import com.cannon.engine.board.Tile;
 import com.cannon.engine.pieces.Piece;
 import com.cannon.engine.player.AI.AlphaBetaWithMoveOrdering;
-import com.cannon.engine.player.AI.IterativeDeepening;
 import com.cannon.engine.player.MoveTransition;
 import com.google.common.collect.Lists;
 
@@ -44,7 +43,6 @@ public class Table extends Observable {
 
     private final Color darkGapColor = Color.BLACK;
     private final Color lightTileColor = Color.decode("#d8b27e");
-    private final Color darkOuterBoardColor = Color.decode("#432616");
 
     private static final Table INSTANCE = new Table();
 
@@ -409,13 +407,6 @@ public class Table extends Observable {
         private AIThinkTank() {
         }
 
-//        @Override
-//        protected Move doInBackground() throws Exception {
-//            final MoveStrategy miniMax = new MiniMax(Table.get().getGameSetup().getSearchDepth());
-//            final Move bestMove = miniMax.execute(Table.get().getGameBoard());
-//            return bestMove;
-//        }
-
         @Override
         protected Move doInBackground() throws Exception {
             final Move bestMove;
@@ -444,9 +435,6 @@ public class Table extends Observable {
         }
     }
 
-    private JFrame getGameFrame() {
-        return this.gameframe;
-    }
 
     public Board getGameBoard() {
         return this.cannonBoard;
@@ -481,21 +469,4 @@ public class Table extends Observable {
         notifyObservers(playerType);
     }
 
-    private JPanel createColumnPanel() {
-        JPanel filePanel = new JPanel(new GridLayout(1, 0));
-        for (int i = 0; i < 10; i++) {
-            char fileChar = (char) ('A' + i);
-            filePanel.add(new JLabel(String.valueOf(fileChar), SwingConstants.CENTER));
-        }
-        return filePanel;
-    }
-
-    private JPanel createRankPanel() {
-        JPanel rankPanel = new JPanel(new GridLayout(0, 1));
-        for (int i = 0; i < 10; i++) {
-            int row = 10 - i;
-            rankPanel.add(new JLabel(String.valueOf(row)));
-        }
-        return rankPanel;
-    }
 }

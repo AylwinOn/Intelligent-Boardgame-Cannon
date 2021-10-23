@@ -59,16 +59,10 @@ public class Soldier extends Piece {
                                             (BoardUtils.SECOND_COLUMN[this.piecePosition] && BoardUtils.NINTH_COLUMN[candidateCannonAttackCoordinateUP]) ||
                                             (BoardUtils.EIGHT_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateCannonAttackCoordinateUP]) ||
                                             (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.EIGHT_COLUMN[candidateCannonAttackCoordinateUP]) ||
-                                            (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateUP]) ||
-                                            (BoardUtils.SEVENTH_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateCannonAttackCoordinateUP]) ||
                                             (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateCannonAttackCoordinateUP]) ||
                                             (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.THIRD_COLUMN[candidateCannonAttackCoordinateUP]) ||
                                             (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateUP]) ||
-                                            (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SIXTH_COLUMN[candidateCannonAttackCoordinateUP]) ||
-                                            (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FOURTH_COLUMN[candidateCannonAttackCoordinateUP]) ||
-                                            (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FIFTH_COLUMN[candidateCannonAttackCoordinateUP]) ||
-                                            (BoardUtils.FOURTH_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateCannonAttackCoordinateUP]) ||
-                                            (BoardUtils.SEVENTH_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateCannonAttackCoordinateUP]))){
+                                            (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FOURTH_COLUMN[candidateCannonAttackCoordinateUP]))){
                                         legalMoves.add(new CannonAttackMove(board, this, this.piecePosition, pieceOnCandidateCannonUP));
                                     }
                                 }
@@ -79,19 +73,15 @@ public class Soldier extends Piece {
                                     final Piece pieceOnCandidateCannonUP2 = board.getTile(candidateCannonAttackCoordinateUP2).getPiece();
                                     if(this.pieceAlliance != pieceOnCandidateCannonUP2.getPieceAlliance()) {
                                         if(!((BoardUtils.NINTH_COLUMN[this.piecePosition] && BoardUtils.THIRD_COLUMN[candidateCannonAttackCoordinateUP2]) ||
-                                                (BoardUtils.EIGHT_COLUMN[this.piecePosition] && BoardUtils.SECOND_COLUMN[candidateCannonAttackCoordinateUP2]) ||
-                                                (BoardUtils.SEVENTH_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateCannonAttackCoordinateUP2]) ||
                                                 (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.NINTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
+                                                (BoardUtils.EIGHT_COLUMN[this.piecePosition] && BoardUtils.SECOND_COLUMN[candidateCannonAttackCoordinateUP2]) ||
                                                 (BoardUtils.SECOND_COLUMN[this.piecePosition] && BoardUtils.EIGHT_COLUMN[candidateCannonAttackCoordinateUP2]) ||
+                                                (BoardUtils.SEVENTH_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateCannonAttackCoordinateUP2]) ||
                                                 (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
-                                                (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
-                                                (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.THIRD_COLUMN[candidateCannonAttackCoordinateUP2]) ||
-                                                (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
-                                                (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SIXTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
-                                                (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FOURTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
-                                                (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FIFTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
+                                                (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.FOURTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
                                                 (BoardUtils.FOURTH_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
-                                                (BoardUtils.SEVENTH_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateCannonAttackCoordinateUP2]))) {
+                                                (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SIXTH_COLUMN[candidateCannonAttackCoordinateUP2]) ||
+                                                (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FIFTH_COLUMN[candidateCannonAttackCoordinateUP2]))) {
                                             legalMoves.add(new CannonAttackMove(board, this, this.piecePosition, pieceOnCandidateCannonUP2));
                                         }
                                     }
@@ -110,16 +100,10 @@ public class Soldier extends Piece {
                                             (BoardUtils.SECOND_COLUMN[this.piecePosition] && BoardUtils.NINTH_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
                                             (BoardUtils.EIGHT_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
                                             (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.EIGHT_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
-                                            (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
-                                            (BoardUtils.SEVENTH_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateCannonAttackCoordinateDOWN])  ||
                                             (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
                                             (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.THIRD_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
                                             (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
-                                            (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SIXTH_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
-                                            (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FOURTH_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
-                                            (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FIFTH_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
-                                            (BoardUtils.FOURTH_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateCannonAttackCoordinateDOWN]) ||
-                                            (BoardUtils.SEVENTH_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateCannonAttackCoordinateDOWN]))) {
+                                            (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FOURTH_COLUMN[candidateCannonAttackCoordinateDOWN]))) {
                                         legalMoves.add(new CannonAttackMove(board, this, this.piecePosition, pieceOnCandidateCannonDOWN));
                                     }
                                 }
@@ -130,19 +114,15 @@ public class Soldier extends Piece {
                                     final Piece pieceOnCandidateCannonDOWN2 = board.getTile(candidateCannonAttackCoordinateDOWN2).getPiece();
                                     if(this.pieceAlliance != pieceOnCandidateCannonDOWN2.getPieceAlliance()) {
                                         if(!((BoardUtils.NINTH_COLUMN[this.piecePosition] && BoardUtils.THIRD_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
-                                                (BoardUtils.EIGHT_COLUMN[this.piecePosition] && BoardUtils.SECOND_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
-                                                (BoardUtils.SEVENTH_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
                                                 (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.NINTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
+                                                (BoardUtils.EIGHT_COLUMN[this.piecePosition] && BoardUtils.SECOND_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
                                                 (BoardUtils.SECOND_COLUMN[this.piecePosition] && BoardUtils.EIGHT_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
-                                                (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateDOWN2])  ||
-                                                (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
-                                                (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.THIRD_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
-                                                (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
-                                                (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SIXTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
-                                                (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FOURTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
-                                                (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FIFTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
+                                                (BoardUtils.SEVENTH_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
+                                                (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.SEVENTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
+                                                (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.FOURTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
                                                 (BoardUtils.FOURTH_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
-                                                (BoardUtils.SEVENTH_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateCannonAttackCoordinateDOWN2]))) {
+                                                (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.SIXTH_COLUMN[candidateCannonAttackCoordinateDOWN2]) ||
+                                                (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.FIFTH_COLUMN[candidateCannonAttackCoordinateDOWN2]))) {
                                             legalMoves.add(new CannonAttackMove(board, this, this.piecePosition, pieceOnCandidateCannonDOWN2));
                                         }
                                     }
@@ -159,9 +139,9 @@ public class Soldier extends Piece {
                             && this.pieceType == pieceOnCandidateUP.getPieceType() && this.pieceType == pieceOnCandidateUP2.getPieceType()) {
                         if(candidateNeighbourCoordinateUP3 >= 0 && candidateNeighbourCoordinateUP3 < 100 && !board.getTile(candidateNeighbourCoordinateUP3).isTileOccupied()) {
                             if(!((BoardUtils.EIGHT_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateNeighbourCoordinateUP3]) ||
+                                    (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.EIGHT_COLUMN[candidateNeighbourCoordinateUP3]) ||
                                     (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateNeighbourCoordinateUP3]) ||
                                     (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.THIRD_COLUMN[candidateNeighbourCoordinateUP3]) ||
-                                    (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.EIGHT_COLUMN[candidateNeighbourCoordinateUP3]) ||
                                     (BoardUtils.SECOND_COLUMN[this.piecePosition] && BoardUtils.NINTH_COLUMN[candidateNeighbourCoordinateUP3]) ||
                                     (BoardUtils.NINTH_COLUMN[this.piecePosition] && BoardUtils.SECOND_COLUMN[candidateNeighbourCoordinateUP3]))) {
                                 legalMoves.add(new CannonSlideMove(board, this, candidateNeighbourCoordinateUP3));
@@ -177,9 +157,9 @@ public class Soldier extends Piece {
                             && this.pieceType == pieceOnCandidateDOWN.getPieceType() && this.pieceType == pieceOnCandidateDOWN2.getPieceType()) {
                         if(candidateNeighbourCoordinateDOWN3 >= 0 && candidateNeighbourCoordinateDOWN3 < 100 && !board.getTile(candidateNeighbourCoordinateDOWN3).isTileOccupied()) {
                             if(!((BoardUtils.EIGHT_COLUMN[this.piecePosition] && BoardUtils.FIRST_COLUMN[candidateNeighbourCoordinateDOWN3]) ||
+                                    (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.EIGHT_COLUMN[candidateNeighbourCoordinateDOWN3]) ||
                                     (BoardUtils.THIRD_COLUMN[this.piecePosition] && BoardUtils.TENTH_COLUMN[candidateNeighbourCoordinateDOWN3]) ||
                                     (BoardUtils.TENTH_COLUMN[this.piecePosition] && BoardUtils.THIRD_COLUMN[candidateNeighbourCoordinateDOWN3]) ||
-                                    (BoardUtils.FIRST_COLUMN[this.piecePosition] && BoardUtils.EIGHT_COLUMN[candidateNeighbourCoordinateDOWN3]) ||
                                     (BoardUtils.SECOND_COLUMN[this.piecePosition] && BoardUtils.NINTH_COLUMN[candidateNeighbourCoordinateDOWN3]) ||
                                     (BoardUtils.NINTH_COLUMN[this.piecePosition] && BoardUtils.SECOND_COLUMN[candidateNeighbourCoordinateDOWN3]))) {
                                 legalMoves.add(new CannonSlideMove(board, this, candidateNeighbourCoordinateDOWN3));

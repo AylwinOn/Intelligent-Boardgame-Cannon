@@ -49,7 +49,7 @@ public class TakenPiecesPanel extends JPanel {
                 } else if(takenPiece.getPieceAlliance().isDark()){
                     darkTakenPieces.add(takenPiece);
                 } else {
-                    throw new RuntimeException("Should not reach here!");
+                    throw new RuntimeException("Should not reach here");
                 }
             }
         }

@@ -21,7 +21,6 @@ public abstract class Player {
     protected final Collection<Move> legalMoves;
     private MoveStrategy strategy;
     protected final boolean isInCheck;
-    protected final boolean isCannonInCheck;
 
     Player(final Board board,
            final Collection<Move> legalMoves,
@@ -31,11 +30,10 @@ public abstract class Player {
         this.playerSoldier = establishSoldier();
         this.legalMoves = legalMoves;
         this.isInCheck = !Player.calculateAttackOnTile(this.playerTown.getPiecePosition(), opponentMoves).isEmpty();
-        this.isCannonInCheck = !Player.calculateCannonAttackOnTile(this.playerTown, opponentMoves).isEmpty();
     }
 
     public boolean isInCheck() {
-        return this.isInCheck || isCannonInCheck;
+        return this.isInCheck;
     }
 
     public Collection<Move> getLegalMoves() {
@@ -48,16 +46,6 @@ public abstract class Player {
 
     public MoveStrategy getMoveStrategy() {
         return this.strategy;
-    }
-
-    private static Collection<Piece> calculateCannonAttackOnTile(Piece town, Collection<Move> moves) {
-        final List<Piece> attackPieces = new ArrayList<>();
-        for(final Move move : moves) {
-            if(town == move.getAttackedPiece()) {
-                attackPieces.add(move.getAttackedPiece());
-            }
-        }
-        return ImmutableList.copyOf(attackPieces);
     }
 
     private static Collection<Move> calculateAttackOnTile(int piecePosition, Collection<Move> moves) {

@@ -106,10 +106,6 @@ public class Board {
         return gameBoard.get(tileCoordinate);
     }
 
-    public Move getTransitionMove() {
-        return this.transitionMove;
-    }
-
     private static List<Tile> createGameBoard(final Builder builder) {
         final Tile[] tiles = new Tile[BoardUtils.NUM_TILES];
         for(int i = 0; i < BoardUtils.NUM_TILES; i++) {
