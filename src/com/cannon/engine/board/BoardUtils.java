@@ -3,8 +3,9 @@ package com.cannon.engine.board;
 import com.cannon.engine.player.MoveTransition;
 import com.google.common.collect.ImmutableMap;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
+import static com.cannon.engine.board.Move.MoveFactory;
 
 public class BoardUtils {
 
@@ -84,6 +85,18 @@ public class BoardUtils {
 
     public static String getPositionAtCoordinate(final int coordinate) {
         return ALGEBREIC_NOTATION[coordinate];
+    }
+
+    public static List<Move> lastNMoves(final Board board, int N) {
+        final List<Move> moveHistory = new ArrayList<>();
+        Move currentMove = board.getTransitionMove();
+        int i = 0;
+        while(currentMove != MoveFactory.getNullMove() && i < N) {
+            moveHistory.add(currentMove);
+            currentMove = currentMove.getBoard().getTransitionMove();
+            i++;
+        }
+        return Collections.unmodifiableList(moveHistory);
     }
 
     public static boolean isEndGame(final Board board) {

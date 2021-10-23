@@ -5,7 +5,8 @@ import com.cannon.engine.board.BoardUtils;
 import com.cannon.engine.board.Move;
 import com.cannon.engine.board.Tile;
 import com.cannon.engine.pieces.Piece;
-import com.cannon.engine.player.AI.AlphaBetaWithMoveOrdering;
+import com.cannon.engine.player.AI.AlphaIterativeDeepening;
+import com.cannon.engine.player.AI.AlphaMoveOrdering;
 import com.cannon.engine.player.MoveTransition;
 import com.google.common.collect.Lists;
 
@@ -255,6 +256,11 @@ public class Table extends Observable {
         COMPUTER
     }
 
+    public enum StrategyType {
+        StrategyOne,
+        StrategyTwo
+    }
+
 
 
     private class TilePanel extends JPanel {
@@ -412,8 +418,14 @@ public class Table extends Observable {
             final Move bestMove;
             final int moveNumber = Table.get().getMoveLog().size();
             final int quiescenceFactor = 2000 + (100 * moveNumber);
-            final AlphaBetaWithMoveOrdering strategy = new AlphaBetaWithMoveOrdering(Table.get().getGameSetup().getSearchDepth(), quiescenceFactor);
-            Table.get().getGameBoard().currentPlayer().setMoveStrategy(strategy);
+            final int timeResources = Table.get().getGameSetup().getTimeResources();
+            final AlphaMoveOrdering strategy1 = new AlphaMoveOrdering(Table.get().getGameSetup().getSearchDepth(), quiescenceFactor);
+            final AlphaIterativeDeepening strategy2 = new AlphaIterativeDeepening(Table.get().getGameSetup().getSearchDepth(), quiescenceFactor, timeResources);
+            if(Table.get().getGameSetup().isStrategyOne(Table.get().getGameBoard().currentPlayer())) {
+                Table.get().getGameBoard().currentPlayer().setMoveStrategy(strategy1);
+            } else {
+                Table.get().getGameBoard().currentPlayer().setMoveStrategy(strategy2);
+            }
             bestMove = Table.get().getGameBoard().currentPlayer().getMoveStrategy().execute(Table.get().getGameBoard());
             return bestMove;
         }

@@ -83,8 +83,6 @@ public class IterativeDeepening extends Observable implements MoveStrategy {
 
         while (currentDepth <= this.searchDepth) {
             final long subTimeStart = System.currentTimeMillis();
-            //int highestSeenValue = Integer.MIN_VALUE;
-            //int lowestSeenValue = Integer.MAX_VALUE;
             int currentValue;
             final List<MoveScoreRecord> records = builder.build();
             builder = new MoveOrderingBuilder();

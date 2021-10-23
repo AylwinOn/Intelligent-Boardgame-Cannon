@@ -102,6 +102,10 @@ public class Board {
         return ImmutableList.copyOf(activePieces);
     }
 
+    public Move getTransitionMove() {
+        return this.transitionMove;
+    }
+
     public Tile getTile(final int tileCoordinate) {
         return gameBoard.get(tileCoordinate);
     }
