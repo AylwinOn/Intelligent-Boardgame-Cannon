@@ -19,7 +19,7 @@ public abstract class Player {
     private MoveStrategy strategy;
     protected final boolean isInCheck;
     private static int positionToCheck;
-    protected final boolean isInRebound;
+    protected final boolean noRebound;
     private int townPosition;
 
     Player(final Board board,
@@ -29,11 +29,11 @@ public abstract class Player {
         this.playerTown = establishTown();
         this.legalMoves = legalMoves;
         this.isInCheck = !Player.calculateAttackOnTown(this.playerTown, opponentMoves).isEmpty();
-        this.isInRebound = !Player.calculateCheckRebound(positionToCheck, legalMoves).isEmpty();
+        this.noRebound = Player.calculateCheckRebound(positionToCheck, legalMoves).isEmpty();
     }
 
     public boolean isInCheck() {
-        return this.isInCheck && this.isInRebound;
+        return (this.isInCheck && this.noRebound);
     }
 
     public Collection<Move> getLegalMoves() {
