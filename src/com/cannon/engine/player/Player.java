@@ -16,23 +16,24 @@ public abstract class Player {
 
     protected final Board board;
     protected final Town playerTown;
-    protected final Soldier playerSoldier;
     protected final Collection<Move> legalMoves;
     private MoveStrategy strategy;
     protected final boolean isInCheck;
+    private static int positionToCheck;
+    protected final boolean isInRebound;
 
     Player(final Board board,
            final Collection<Move> legalMoves,
            final Collection<Move> opponentMoves) {
         this.board = board;
         this.playerTown = establishTown();
-        this.playerSoldier = establishSoldier();
         this.legalMoves = legalMoves;
-        this.isInCheck = !Player.calculateAttackOnTile(this.playerTown.getPiecePosition(), opponentMoves).isEmpty();
+        this.isInCheck = !Player.calculateAttackOnTown(this.playerTown.getPiecePosition(), opponentMoves).isEmpty();
+        this.isInRebound = !Player.calculateCheckRebound(positionToCheck, legalMoves).isEmpty();
     }
 
     public boolean isInCheck() {
-        return this.isInCheck;
+        return this.isInCheck && this.isInRebound;
     }
 
     public Collection<Move> getLegalMoves() {
@@ -47,7 +48,18 @@ public abstract class Player {
         return this.strategy;
     }
 
-    private static Collection<Move> calculateAttackOnTile(int piecePosition, Collection<Move> moves) {
+    private static Collection<Move> calculateAttackOnTown(int piecePosition, Collection<Move> moves) {
+        final List<Move> attackMoves = new ArrayList<>();
+        for(final Move move : moves) {
+            if(piecePosition == move.getDestinationCoordinate()) {
+                positionToCheck = move.getCurrentCoordinate();
+                attackMoves.add(move);
+            }
+        }
+        return ImmutableList.copyOf(attackMoves);
+    }
+
+    private static Collection<Move> calculateCheckRebound(int piecePosition, Collection<Move> moves) {
         final List<Move> attackMoves = new ArrayList<>();
         for(final Move move : moves) {
             if(piecePosition == move.getDestinationCoordinate()) {
@@ -64,16 +76,6 @@ public abstract class Player {
             }
         }
         throw new RuntimeException("CHECHMATE! " +this.getAlliance()+ " king could not be established!");
-    }
-
-    protected Soldier establishSoldier() {
-        return null;
-    }
-
-    private boolean hasEscapeMoves() {
-        return this.legalMoves.stream()
-                .anyMatch(move -> makeMove(move)
-                        .getMoveStatus().isDone());
     }
 
     public boolean isMoveLegal(final Move move) {
