@@ -15,7 +15,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 
-import com.cannon.engine.Alliance;
+import com.cannon.engine.player.Alliance;
 import com.cannon.engine.player.Player;
 import com.cannon.gui.Table.PlayerType;
 import com.cannon.gui.Table.StrategyType;

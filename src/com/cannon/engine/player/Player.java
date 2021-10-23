@@ -1,12 +1,11 @@
 package com.cannon.engine.player;
 
-import com.cannon.engine.Alliance;
 import com.cannon.engine.board.Board;
 import com.cannon.engine.board.Move;
 import com.cannon.engine.pieces.Piece;
 import com.cannon.engine.pieces.Soldier;
 import com.cannon.engine.pieces.Town;
-import com.cannon.engine.player.AI.MoveStrategy;
+import com.cannon.engine.AI.support.MoveStrategy;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;

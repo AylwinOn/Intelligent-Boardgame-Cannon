@@ -1,4 +1,4 @@
-package com.cannon.engine.player.AI;
+package com.cannon.engine.AI.support;
 
 import com.cannon.engine.board.Board;
 

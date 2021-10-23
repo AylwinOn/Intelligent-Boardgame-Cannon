@@ -1,6 +1,5 @@
 package com.cannon.engine.player;
 
-import com.cannon.engine.Alliance;
 import com.cannon.engine.board.Board;
 import com.cannon.engine.board.Move;
 import com.cannon.engine.pieces.Piece;

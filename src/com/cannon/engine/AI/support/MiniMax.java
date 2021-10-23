@@ -1,11 +1,14 @@
-package com.cannon.engine.player.AI;
+package com.cannon.engine.AI.support;
 
+import com.cannon.engine.AI.support.BoardEvaluator;
+import com.cannon.engine.AI.support.MoveStrategy;
+import com.cannon.engine.AI.support.StandardBoardEvaluator;
 import com.cannon.engine.board.Board;
 import com.cannon.engine.board.Move;
 import com.cannon.engine.player.MoveTransition;
 
 
-public class MiniMax implements MoveStrategy{
+public class MiniMax implements MoveStrategy {
 
     private final BoardEvaluator boardEvaluator;
     private final int searchDepth;

@@ -5,8 +5,8 @@ import com.cannon.engine.board.BoardUtils;
 import com.cannon.engine.board.Move;
 import com.cannon.engine.board.Tile;
 import com.cannon.engine.pieces.Piece;
-import com.cannon.engine.player.AI.AlphaIterativeDeepening;
-import com.cannon.engine.player.AI.AlphaMoveOrdering;
+import com.cannon.engine.AI.AlphaTwo;
+import com.cannon.engine.AI.AlphaOne;
 import com.cannon.engine.player.MoveTransition;
 import com.google.common.collect.Lists;
 
@@ -419,8 +419,8 @@ public class Table extends Observable {
             final int moveNumber = Table.get().getMoveLog().size();
             final int quiescenceFactor = 2000 + (100 * moveNumber);
             final int timeResources = Table.get().getGameSetup().getTimeResources();
-            final AlphaMoveOrdering strategy1 = new AlphaMoveOrdering(Table.get().getGameSetup().getSearchDepth(), quiescenceFactor);
-            final AlphaIterativeDeepening strategy2 = new AlphaIterativeDeepening(Table.get().getGameSetup().getSearchDepth(), quiescenceFactor, timeResources);
+            final AlphaOne strategy1 = new AlphaOne(Table.get().getGameSetup().getSearchDepth(), quiescenceFactor);
+            final AlphaTwo strategy2 = new AlphaTwo(Table.get().getGameSetup().getSearchDepth(), quiescenceFactor, timeResources);
             if(Table.get().getGameSetup().isStrategyOne(Table.get().getGameBoard().currentPlayer())) {
                 Table.get().getGameBoard().currentPlayer().setMoveStrategy(strategy1);
             } else {

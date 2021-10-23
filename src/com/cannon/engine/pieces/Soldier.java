@@ -1,10 +1,9 @@
 package com.cannon.engine.pieces;
 
-import com.cannon.engine.Alliance;
+import com.cannon.engine.player.Alliance;
 import com.cannon.engine.board.Board;
 import com.cannon.engine.board.BoardUtils;
 import com.cannon.engine.board.Move;
-import com.cannon.engine.player.Player;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.cannon.engine;
+package com.cannon.engine.player;
 
 import com.cannon.engine.player.DarkPlayer;
 import com.cannon.engine.player.LightPlayer;

@@ -1,7 +1,10 @@
-package com.cannon.engine.player.AI;
+package com.cannon.engine.AI;
 
 
-import com.cannon.engine.Alliance;
+import com.cannon.engine.AI.support.BoardEvaluator;
+import com.cannon.engine.AI.support.MoveStrategy;
+import com.cannon.engine.AI.support.StandardBoardEvaluator;
+import com.cannon.engine.player.Alliance;
 import com.cannon.engine.board.Board;
 import com.cannon.engine.board.BoardUtils;
 import com.cannon.engine.board.Move;
@@ -9,25 +12,25 @@ import com.cannon.engine.player.MoveTransition;
 import com.cannon.engine.player.Player;
 import com.cannon.pgn.ZobristHashing;
 import com.google.common.collect.ComparisonChain;
-import com.google.common.primitives.Ints;
+import com.google.common.collect.Ordering;
 
 import java.util.*;
 
 import static com.cannon.engine.board.Move.*;
-import static com.google.common.collect.Ordering.from;
 
-public class AlphaIterativeDeepening extends Observable implements MoveStrategy {
+public class AlphaOne extends Observable implements MoveStrategy {
 
     private final BoardEvaluator evaluator;
     private final int searchDepth;
     private final MoveSorter moveSorter;
     private final int quiescenceFactor;
-    private long timeResources;
     private long boardsEvaluated;
     private long executionTime;
     private int quiescenceCount;
     private static final int MAX_QUIESCENCE = 5000 * 5;
     private int cutOffsProduced;
+    private int highestSeenValue = Integer.MIN_VALUE;
+    private int lowestSeenValue = Integer.MAX_VALUE;
     private int nodesExplored = 0;
     private int depthExplored = 0;
     private Map<Long,tableNode> transposition = new HashMap<>();
@@ -49,7 +52,7 @@ public class AlphaIterativeDeepening extends Observable implements MoveStrategy 
         SORT {
             @Override
             Collection<Move> sort(final Collection<Move> moves) {
-                return from(SMART_SORT).immutableSortedCopy(moves);
+                return Ordering.from(SMART_SORT).immutableSortedCopy(moves);
             }
         };
 
@@ -67,13 +70,11 @@ public class AlphaIterativeDeepening extends Observable implements MoveStrategy 
         abstract Collection<Move> sort(Collection<Move> moves);
     }
 
-    public AlphaIterativeDeepening(final int searchDepth,
-                                   final int quiescenceFactor,
-                                   final int timeResources) {
+    public AlphaOne(final int searchDepth,
+                    final int quiescenceFactor) {
         this.evaluator = StandardBoardEvaluator.get();
         this.searchDepth = searchDepth;
         this.quiescenceFactor = quiescenceFactor;
-        this.timeResources = timeResources;
         this.moveSorter = MoveSorter.SORT;
         this.boardsEvaluated = 0;
         this.quiescenceCount = 0;
@@ -83,7 +84,7 @@ public class AlphaIterativeDeepening extends Observable implements MoveStrategy 
 
     @Override
     public String toString() {
-        return "AB+ID";
+        return "AlphaOne";
     }
 
 
@@ -94,52 +95,42 @@ public class AlphaIterativeDeepening extends Observable implements MoveStrategy 
         final Alliance alliance = currentPlayer.getAlliance();
         Move bestMove = MoveFactory.getNullMove();
         int currentValue;
+        int moveCounter = 1;
+        final int numMoves = this.moveSorter.sort(board.currentPlayer().getLegalMoves()).size();
         System.out.println(board.currentPlayer() + " THINKING with depth = " + this.searchDepth);
         System.out.println("\tOrdered moves! : " + this.moveSorter.sort(board.currentPlayer().getLegalMoves()));
-        MoveOrderingBuilder builder = new MoveOrderingBuilder();
-        builder.setOrder(board.currentPlayer().getAlliance().isLight() ? Ordering.DESC : Ordering.ASC);
-        for(final Move move : board.currentPlayer().getLegalMoves()) {
-            builder.addMoveOrderingRecord(move, 0);
-        }
+        for (final Move move : this.moveSorter.sort(board.currentPlayer().getLegalMoves())) {
+            final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
+            this.quiescenceCount = 0;
+            final String s;
+            if (moveTransition.getMoveStatus().isDone()) {
+                final long candidateMoveStartTime = System.nanoTime();
+                currentValue = alliance.isLight() ?
+                        min(moveTransition.getToBoard(), this.searchDepth - 1, highestSeenValue, lowestSeenValue) :
+                        max(moveTransition.getToBoard(), this.searchDepth - 1, highestSeenValue, lowestSeenValue);
+                if (alliance.isLight() && currentValue > highestSeenValue) {
+                    highestSeenValue = currentValue;
+                    bestMove = move;
+                }
+                else if (alliance.isDark() && currentValue < lowestSeenValue) {
+                    lowestSeenValue = currentValue;
+                    bestMove = move;
+                }
+                final String quiescenceInfo = " [h: " +highestSeenValue+ " l: " +lowestSeenValue+ "] q: " +this.quiescenceCount;
+                s = "\t" + toString() + "(" +this.searchDepth+ "), m: (" +moveCounter+ "/" +numMoves+ ") " + move + ", best:  " + bestMove
 
-        int currentDepth = 1;
-        int highestSeenValue = Integer.MIN_VALUE;
-        int lowestSeenValue = Integer.MAX_VALUE;
-        while (currentDepth <= this.searchDepth) {
-            final long subTimeStart = System.currentTimeMillis();
-            final List<MoveScoreRecord> records = builder.build();
-            builder = new MoveOrderingBuilder();
-            builder.setOrder(board.currentPlayer().getAlliance().isLight() ? Ordering.DESC : Ordering.ASC);
-            for (MoveScoreRecord record : records) {
-                if(System.currentTimeMillis() - startTime >= this.timeResources) {
-                    break;
-                }
-                final Move move = record.getMove();
-                final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
-                this.quiescenceCount = 0;
-                if (moveTransition.getMoveStatus().isDone()) {
-                    currentValue = alliance.isLight() ?
-                            min(moveTransition.getToBoard(), currentDepth - 1, highestSeenValue, lowestSeenValue) :
-                            max(moveTransition.getToBoard(), currentDepth - 1, highestSeenValue, lowestSeenValue);
-                    builder.addMoveOrderingRecord(move, currentValue);
-                    if (alliance.isLight() && currentValue > highestSeenValue) {
-                        highestSeenValue = currentValue;
-                        bestMove = move;
-                    } else if (alliance.isDark() && currentValue < lowestSeenValue) {
-                        lowestSeenValue = currentValue;
-                        bestMove = move;
-                    }
-                }
+                        + quiescenceInfo + ", t: " +calculateTimeTaken(candidateMoveStartTime, System.nanoTime());
+            } else {
+                s = "\t" + toString() + ", m: (" +moveCounter+ "/" +numMoves+ ") " + move + " is illegal, best: " +bestMove;
             }
-            final long subTime = System.currentTimeMillis()- subTimeStart;
-            System.out.println("\t" +toString()+ " bestMove = " +bestMove+ " Depth = " +currentDepth+ " took " +(subTime) + " ms");
+            System.out.println(s);
             setChanged();
-            notifyObservers(bestMove);
-            currentDepth++;
+            notifyObservers(s);
+            moveCounter++;
         }
         this.executionTime = System.currentTimeMillis() - startTime;
         System.out.printf("%s SELECTS %s [#boards evaluated = %d, time taken = %d ms, eval rate = %.1f cutoffCount = %d prune percent = %.2f\n", board.currentPlayer(),
-                    bestMove, this.boardsEvaluated, this.executionTime, (1000 * ((double)this.boardsEvaluated/this.executionTime)), this.cutOffsProduced, 100 * ((double)this.cutOffsProduced/this.boardsEvaluated));
+                bestMove, this.boardsEvaluated, this.executionTime, (1000 * ((double)this.boardsEvaluated/this.executionTime)), this.cutOffsProduced, 100 * ((double)this.cutOffsProduced/this.boardsEvaluated));
         return bestMove;
     }
 
@@ -273,9 +264,10 @@ public class AlphaIterativeDeepening extends Observable implements MoveStrategy 
         return depth - 1;
     }
 
-    private static long calculateTimeTaken(final long start, final long end) {
+
+    private static String calculateTimeTaken(final long start, final long end) {
         final long timeTaken = (end - start) / 1000000;
-        return timeTaken;
+        return timeTaken + " ms";
     }
 
     protected void updateDepth(int depth) {
@@ -284,89 +276,6 @@ public class AlphaIterativeDeepening extends Observable implements MoveStrategy 
 
     protected void incrementNodeCount() {
         nodesExplored++;
-    }
-
-
-    private static class MoveScoreRecord implements Comparable<MoveScoreRecord> {
-        final Move move;
-        final int score;
-
-        MoveScoreRecord(final Move move, final int score) {
-            this.move = move;
-            this.score = score;
-        }
-
-        Move getMove() {
-            return this.move;
-        }
-
-        int getScore() {
-            return this.score;
-        }
-
-        @Override
-        public int compareTo(MoveScoreRecord o) {
-            return Integer.compare(this.score, o.score);
-        }
-
-        @Override
-        public String toString() {
-            return this.move + " : " +this.score;
-        }
-    }
-
-    enum Ordering {
-        ASC {
-            @Override
-            List<MoveScoreRecord> order(final List<MoveScoreRecord> moveScoreRecords) {
-                Collections.sort(moveScoreRecords, new Comparator<MoveScoreRecord>() {
-                    @Override
-                    public int compare(final MoveScoreRecord o1,
-                                       final MoveScoreRecord o2) {
-                        return Ints.compare(o1.getScore(), o2.getScore());
-                    }
-                });
-                return moveScoreRecords;
-            }
-        },
-        DESC {
-            @Override
-            List<MoveScoreRecord> order(final List<MoveScoreRecord> moveScoreRecords) {
-                Collections.sort(moveScoreRecords, new Comparator<MoveScoreRecord>() {
-                    @Override
-                    public int compare(final MoveScoreRecord o1,
-                                       final MoveScoreRecord o2) {
-                        return Ints.compare(o2.getScore(), o1.getScore());
-                    }
-                });
-                return moveScoreRecords;
-            }
-        };
-
-        abstract List<MoveScoreRecord> order(final List<MoveScoreRecord> moveScoreRecords);
-    }
-
-
-    private static class MoveOrderingBuilder {
-        List<MoveScoreRecord> moveScoreRecords;
-        Ordering ordering;
-
-        MoveOrderingBuilder() {
-            this.moveScoreRecords = new ArrayList<>();
-        }
-
-        void addMoveOrderingRecord(final Move move,
-                                   final int score) {
-            this.moveScoreRecords.add(new MoveScoreRecord(move, score));
-        }
-
-        void setOrder(final Ordering order) {
-            this.ordering = order;
-        }
-
-        List<MoveScoreRecord> build() {
-            return this.ordering.order(moveScoreRecords);
-        }
     }
 
 }
