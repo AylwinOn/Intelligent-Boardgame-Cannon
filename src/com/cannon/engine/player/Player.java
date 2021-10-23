@@ -3,7 +3,6 @@ package com.cannon.engine.player;
 import com.cannon.engine.board.Board;
 import com.cannon.engine.board.Move;
 import com.cannon.engine.pieces.Piece;
-import com.cannon.engine.pieces.Soldier;
 import com.cannon.engine.pieces.Town;
 import com.cannon.engine.AI.support.MoveStrategy;
 import com.google.common.collect.ImmutableList;
@@ -15,12 +14,13 @@ import java.util.List;
 public abstract class Player {
 
     protected final Board board;
-    protected final Town playerTown;
+    protected final int playerTown;
     protected final Collection<Move> legalMoves;
     private MoveStrategy strategy;
     protected final boolean isInCheck;
     private static int positionToCheck;
     protected final boolean isInRebound;
+    private int townPosition;
 
     Player(final Board board,
            final Collection<Move> legalMoves,
@@ -28,7 +28,7 @@ public abstract class Player {
         this.board = board;
         this.playerTown = establishTown();
         this.legalMoves = legalMoves;
-        this.isInCheck = !Player.calculateAttackOnTown(this.playerTown.getPiecePosition(), opponentMoves).isEmpty();
+        this.isInCheck = !Player.calculateAttackOnTown(this.playerTown, opponentMoves).isEmpty();
         this.isInRebound = !Player.calculateCheckRebound(positionToCheck, legalMoves).isEmpty();
     }
 
@@ -69,13 +69,13 @@ public abstract class Player {
         return ImmutableList.copyOf(attackMoves);
     }
 
-    private Town establishTown() {
+    private int establishTown() {
         for(final Piece piece : getActivePieces()) {
             if(piece.getPieceType().isTown()) {
-                return (Town) piece;
+                townPosition = piece.getPiecePosition();
             }
         }
-        throw new RuntimeException("CHECHMATE! " +this.getAlliance()+ " king could not be established!");
+        return townPosition;
     }
 
     public boolean isMoveLegal(final Move move) {

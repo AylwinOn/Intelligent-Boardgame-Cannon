@@ -150,6 +150,18 @@ public abstract class Move {
         }
 
         @Override
+        public Board execute() {
+            final Board.Builder builder = new Builder();
+            this.board.currentPlayer().getActivePieces().stream().filter(piece -> !this.movedPiece.equals(piece)).forEach(builder::setPiece);
+            this.board.currentPlayer().getOpponent().getActivePieces().forEach(builder::setPiece);
+            final Town movedTown = (Town)this.movedPiece.movePiece(this);
+            builder.setPiece(movedTown);
+            builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
+            builder.setMoveTransition(this);
+            return builder.build();
+        }
+
+        @Override
         public String toString() {
             return BoardUtils.getPositionAtCoordinate(this.destinationCoordinate);
         }
