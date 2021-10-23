@@ -73,7 +73,7 @@ public class AlphaOne extends Observable implements MoveStrategy {
     public AlphaOne(final int searchDepth,
                     final int quiescenceFactor) {
         this.evaluator = StandardBoardEvaluator.get();
-        this.searchDepth = searchDepth;
+        this.searchDepth = Math.min(searchDepth, 6);
         this.quiescenceFactor = quiescenceFactor;
         this.moveSorter = MoveSorter.SORT;
         this.boardsEvaluated = 0;
