@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -69,33 +70,26 @@ public class TakenPiecesPanel extends JPanel {
         });
 
         for (final Piece takenPiece : lightTakenPieces) {
-            try {
-                final BufferedImage image = ImageIO.read(new File("art/pieces/plain/"
-                        + takenPiece.getPieceAlliance().toString().substring(0, 1) + "" + takenPiece.toString()
-                        + ".png"));
-                final ImageIcon ic = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance(
-                        ic.getIconWidth() - 15, ic.getIconWidth() - 15, Image.SCALE_SMOOTH)));
-                this.southPanel.add(imageLabel);
-            }
-            catch (final IOException e) {
-                e.printStackTrace();
-            }
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            URL resource = classLoader.getResource("pieces/"
+                    + takenPiece.getPieceAlliance().toString().substring(0, 1) + "" + takenPiece.toString()
+                    + ".png");
+            final ImageIcon ic = new ImageIcon(resource);
+            final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance(
+                    ic.getIconWidth() - 15, ic.getIconWidth() - 15, Image.SCALE_SMOOTH)));
+            this.southPanel.add(imageLabel);
         }
 
         for (final Piece takenPiece : darkTakenPieces) {
-            try {
-                final BufferedImage image = ImageIO.read(new File("art/pieces/plain/"
-                        + takenPiece.getPieceAlliance().toString().substring(0, 1) + "" + takenPiece.toString()
-                        + ".png"));
-                final ImageIcon ic = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance(
-                        ic.getIconWidth() - 15, ic.getIconWidth() - 15, Image.SCALE_SMOOTH)));
-                this.northPanel.add(imageLabel);
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            URL resource = classLoader.getResource("pieces/"
+                    + takenPiece.getPieceAlliance().toString().substring(0, 1) + "" + takenPiece.toString()
+                    + ".png");
+            final ImageIcon ic = new ImageIcon(resource);
+            final JLabel imageLabel = new JLabel(new ImageIcon(ic.getImage().getScaledInstance(
+                    ic.getIconWidth() - 15, ic.getIconWidth() - 15, Image.SCALE_SMOOTH)));
+            this.northPanel.add(imageLabel);
 
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
         }
         validate();
     }

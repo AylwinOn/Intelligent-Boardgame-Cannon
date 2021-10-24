@@ -17,6 +17,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class Table extends Observable {
     private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(800,700);
     private final static Dimension BOARD_PANEL_DIMENSION = new Dimension(800, 800);
     private final static Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
-    private static String defaultPieceImagesPath = "art/pieces/plain/";
+    private static String defaultPieceImagesPath = "src/art/pieces/";
 
     private final Color darkGapColor = Color.BLACK;
     private final Color lightTileColor = Color.decode("#d8b27e");
@@ -345,14 +346,10 @@ public class Table extends Observable {
         private void assignTilePieceIcon(final Board board) {
             this.removeAll();
             if (board.getTile(this.tileId).isTileOccupied()) {
-                try {
-                    final BufferedImage image =
-                            ImageIO.read(new File(defaultPieceImagesPath + board.getTile(this.tileId).getPiece().getPieceAlliance().toString().substring(0, 1) +
-                            board.getTile(this.tileId).getPiece().toString() + ".png"));
-                    add(new JLabel(new ImageIcon(image)));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+                URL resource = classLoader.getResource("pieces/" + board.getTile(this.tileId).getPiece().getPieceAlliance().toString().substring(0, 1) +
+                        board.getTile(this.tileId).getPiece().toString() + ".png");
+                add(new JLabel(new ImageIcon(resource)));
             }
         }
 
@@ -360,11 +357,9 @@ public class Table extends Observable {
             if(highlightLegalMoves) {
                 for(final Move move : pieceLegalMoves(board)) {
                     if(move.getDestinationCoordinate() == this.tileId) {
-                        try {
-                            add(new JLabel(new ImageIcon(ImageIO.read(new File("art/misc/green_dot.png")))));
-                        } catch(Exception e) {
-                            e.printStackTrace();
-                        }
+                        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+                        URL resource = classLoader.getResource("misc/green_dot.png");
+                        add(new JLabel(new ImageIcon(resource)));
                     }
                 }
             }

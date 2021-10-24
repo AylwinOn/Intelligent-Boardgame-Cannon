@@ -31,8 +31,8 @@ public class GameSetup extends JDialog {
 
     private static final String HUMAN_TEXT = "Human";
     private static final String COMPUTER_TEXT = "Computer";
-    private static final String STRARTEGY_ONE_TEXT = "Strategy One";
-    private static final String STRATEGY_TWO_TEXT = "Strategy Two";
+    private static final String STRATEGY_ONE_TEXT = "AlphaOne";
+    private static final String STRATEGY_TWO_TEXT = "AlphaTwo";
 
     public static boolean AIplayerDark = false;
     public static boolean AIplayerLight = false;
@@ -44,9 +44,9 @@ public class GameSetup extends JDialog {
         final JRadioButton lightComputerButton = new JRadioButton(COMPUTER_TEXT);
         final JRadioButton darkHumanButton = new JRadioButton(HUMAN_TEXT);
         final JRadioButton darkComputerButton = new JRadioButton(COMPUTER_TEXT);
-        final JRadioButton lightStrategy1Button = new JRadioButton(STRARTEGY_ONE_TEXT);
+        final JRadioButton lightStrategy1Button = new JRadioButton(STRATEGY_ONE_TEXT);
         final JRadioButton lightStrategy2Button = new JRadioButton(STRATEGY_TWO_TEXT);
-        final JRadioButton darkStrategy1Button = new JRadioButton(STRARTEGY_ONE_TEXT);
+        final JRadioButton darkStrategy1Button = new JRadioButton(STRATEGY_ONE_TEXT);
         final JRadioButton darkStrategy2Button = new JRadioButton(STRATEGY_TWO_TEXT);
 
         lightHumanButton.setActionCommand(HUMAN_TEXT);
@@ -60,7 +60,7 @@ public class GameSetup extends JDialog {
         darkGroup.add(darkComputerButton);
         darkHumanButton.setSelected(true);
 
-        lightStrategy1Button.setActionCommand(STRARTEGY_ONE_TEXT);
+        lightStrategy1Button.setActionCommand(STRATEGY_ONE_TEXT);
         final ButtonGroup lightStrategyGroup = new ButtonGroup();
         lightStrategyGroup.add(lightStrategy1Button);
         lightStrategyGroup.add(lightStrategy2Button);
